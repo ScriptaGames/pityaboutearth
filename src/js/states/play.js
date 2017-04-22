@@ -69,18 +69,33 @@ class PlayState extends Phaser.State {
         const earth = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'earth');
         earth.scale.set(10, 10);
         earth.anchor.set(0.5, 0.5);
+
+        // DEBUG
+        earth.inputEnabled = true;
+        earth.events.onInputDown.add(() => this.sounds.Siren.play(), this);
+
         return earth;
     }
 
     createAsteroid() {
         const ast = this.game.add.sprite(20, 26, 'asteroid');
         ast.scale.set(10, 10);
+
+        // DEBUG
+        ast.inputEnabled = true;
+        ast.events.onInputDown.add(() => this.sounds.AsteroidHit1.play(), this);
+
         return ast;
     }
 
     createComet() {
         const com = this.game.add.sprite(220, 26, 'comet');
         com.scale.set(10, 10);
+
+        // DEBUG
+        com.inputEnabled = true;
+        com.events.onInputDown.add(() => this.sounds.AsteroidHit2.play(), this);
+
         return com;
     }
 
