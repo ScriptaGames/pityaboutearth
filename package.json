@@ -6,8 +6,9 @@
   "scripts": {
     "postinstall": "echo \"Play nice!\"",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "browser-sync start --server --serveStatic src/client --files 'src/client/**/*' --no-inject-changes --directory",
-    "build": "mkdir -p dist && cp -r src/client/* dist && babel src/client --out-dir dist --presets=env --ignore lib/*"
+    "start": "browser-sync start --server --serveStatic src/client --files 'src/client/**/*' --no-inject-changes --directory & nodemon --watch src/server src/server/main.js",
+    "build": "mkdir -p dist && cp -r src/client/* dist && babel src/client --out-dir dist --presets=env --ignore lib/*",
+    "start-prod": "node src/server/main.js"
   },
   "author": "TeamScripta <admin@scripta.co>",
   "contributors": [
@@ -19,7 +20,11 @@
   "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-preset-env": "^1.1.6",
-    "browser-sync": "^2.18.2"
+    "browser-sync": "^2.18.2",
+    "nodemon": "^1.11.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "lance-gg": "^1.0.5",
+    "socket.io": "^1.7.3"
+  }
 }
