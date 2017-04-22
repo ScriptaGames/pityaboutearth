@@ -20,6 +20,8 @@ class PlayState extends Phaser.State {
 
     update() {
         this.updateCollisions();
+        this.updateControls();
+        this.updateBarrierRotation();
     }
 
     render() {
@@ -113,6 +115,20 @@ class PlayState extends Phaser.State {
         // this.game.physics.arcade.collide(this.fallingVuln, [this.leftWall, this.rightWall]);
         // this.game.physics.arcade.collide(this.portalIn, [this.leftWall, this.rightWall]);
         // this.game.physics.arcade.collide(this.well, this.capturedBlocks, null, this.blockSplash, this);
+    }
+
+    updateControls() {
+        // console.log(`[play] mouse at ${this.game.input.mousePointer.x},${this.game.input.mousePointer.y}`);
+    }
+
+    updateBarrierRotation() {
+        const x = this.game.input.mousePointer.x - this.actors.barrier.position.x;
+        const y = this.game.input.mousePointer.y - this.actors.barrier.position.y;
+        let angle = -1 * Math.atan(x/y) + 2*Math.PI;
+        if (y > 0) {
+            angle += Math.PI;
+        }
+        this.actors.barrier.rotation = angle;
     }
 
     /* misc functions */
