@@ -11,6 +11,9 @@ class PreloadState extends Phaser.State {
         this.game.load.image('barrier', 'images/barrier.png');
         this.game.load.image('barrier-full', 'images/barrier-full.png');
 
+        this.game.load.image('btn-humanity', 'images/button-humanity.png');
+        this.game.load.image('btn-universe', 'images/button-universe.png');
+
         // Sprite sheets
 
         // this.game.load.spritesheet('sheet', 'images/sheet.png', 44, 44, 30);

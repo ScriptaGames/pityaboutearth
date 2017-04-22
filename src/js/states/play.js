@@ -1,7 +1,13 @@
 class PlayState extends Phaser.State {
-    create(playerRole='Humanity') {
+    init({ playerRole=PlayerRoles.Humanity }={}) {
+        console.log(`[play] playing as ${playerRole}`);
+        this.playerRole = playerRole;
+    }
+
+    create() {
         console.log('[play] starting play state');
 
+        // for easy access to this state for debugging in browser console
         window.play = this;
 
         this.createBackground();

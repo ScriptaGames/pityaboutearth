@@ -17,8 +17,8 @@ class BootState extends Phaser.State {
         this.game.stateTransition = this.game.plugins.add(Phaser.Plugin.StateTransition);
 
         this.game.stateTransition.configure({
-            duration: 2.8 * Phaser.Timer.SECOND,
-            ease: Phaser.Easing.Exponential.InOut,
+            duration: 0.618 * Phaser.Timer.SECOND,
+            ease: Phaser.Easing.Exponential.Out,
             properties: {
                 alpha: 0,
             },
