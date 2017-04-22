@@ -122,19 +122,29 @@ class PlayState extends Phaser.State {
     }
 
     updateBarrierRotation() {
-        const x = this.game.input.mousePointer.x - this.actors.barrier.position.x;
-        const y = this.game.input.mousePointer.y - this.actors.barrier.position.y;
-        let angle = -1 * Math.atan(x/y) + 2*Math.PI;
-        if (y > 0) {
-            angle += Math.PI;
+        if (this.isHumanity()) {
+            const x = this.game.input.mousePointer.x - this.actors.barrier.position.x;
+            const y = this.game.input.mousePointer.y - this.actors.barrier.position.y;
+            let angle = -1 * Math.atan(x/y) + 2*Math.PI;
+            if (y > 0) {
+                angle += Math.PI;
+            }
+            this.actors.barrier.rotation = angle;
         }
-        this.actors.barrier.rotation = angle;
     }
 
     /* misc functions */
 
     playMusic() {
         this.sounds.PlayMusic.play();
+    }
+
+    isUniverse() {
+        return this.playerRole === PlayerRoles.Universe;
+    }
+
+    isHumanity() {
+        return this.playerRole === PlayerRoles.Humanity;
     }
 
 }
