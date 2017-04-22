@@ -1,15 +1,13 @@
 class PlayState extends Phaser.State {
-    create() {
+    create(playerRole='Humanity') {
         console.log('[play] starting play state');
 
         window.play = this;
 
-        this.createSounds();
         this.createBackground();
-        this.createEarth();
-        this.createAsteroid();
-        this.createComet();
-        this.createBarrier();
+        this.createSounds();
+
+        this.createActors();
 
         this.playMusic();
     }
@@ -33,6 +31,16 @@ class PlayState extends Phaser.State {
 
     /* create functions */
 
+    createActors() {
+        this.actors = {
+            earth: this.createEarth(),
+            barrier: this.createBarrier(),
+            // comet and asteroid only populated here for testing
+            comets: [this.createComet()],
+            asteroids: [this.createAsteroid()],
+        };
+    }
+
     createSounds() {
         this.sounds = {
             AsteroidHit2 : this.game.add.audio('AsteroidHit2'),
@@ -47,28 +55,34 @@ class PlayState extends Phaser.State {
     createBackground() {
         const bg = this.game.add.sprite(0, 0, 'background');
         bg.scale.set(10, 10);
+        return bg;
     }
 
     createEarth() {
-        this.earth = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'earth');
-        this.earth.scale.set(10, 10);
-        this.earth.anchor.set(0.5, 0.5);
+        console.log('[play] creating earth');
+        const earth = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'earth');
+        earth.scale.set(10, 10);
+        earth.anchor.set(0.5, 0.5);
+        return earth;
     }
 
     createAsteroid() {
         const ast = this.game.add.sprite(20, 26, 'asteroid');
         ast.scale.set(10, 10);
+        return ast;
     }
 
     createComet() {
         const com = this.game.add.sprite(220, 26, 'comet');
         com.scale.set(10, 10);
+        return com;
     }
 
     createBarrier() {
-        this.barrier = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'barrier');
-        this.barrier.scale.set(10, 10);
-        this.barrier.anchor.set(0.5, 0.5);
+        const barrier = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'barrier');
+        barrier.scale.set(10, 10);
+        barrier.anchor.set(0.5, 0.5);
+        return barrier;
     }
 
     /* update functions */
