@@ -13,6 +13,7 @@ class PreloadState extends Phaser.State {
 
         this.game.load.image('btn-humanity', 'images/button-humanity.png');
         this.game.load.image('btn-universe', 'images/button-universe.png');
+        this.game.load.image('btn-play',     'images/button-play.png');
 
         // Sprite sheets
 

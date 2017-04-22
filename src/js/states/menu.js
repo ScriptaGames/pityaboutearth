@@ -13,7 +13,16 @@ class MenuState extends Phaser.State {
         this.scoreText.fontSize = 124;
         this.scoreText.anchor.set(0.5, 0);
 
-        this.game.time.events.add(0, this.next, this);
+        const btnHum = game.add.button(
+            game.world.centerX - 160,
+            game.world.height - 80,
+            'btn-play',
+            this.next,
+            this
+        );
+        btnHum.anchor.set(0.5, 1);
+        btnHum.scale.set(4, 4);
+
     }
 
     next() {
