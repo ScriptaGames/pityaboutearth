@@ -1,0 +1,159 @@
+/*
+ * Fade List Animation
+ */
+
+.fade {
+    -webkit-animation: listfade linear 2s; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: listfade linear 2s; /* Firefox < 16 */
+    -ms-animation: listfade linear 2s; /* Internet Explorer */
+    -o-animation: listfade linear 2s; /* Opera < 12.1 */
+    animation: listfade linear 2s;
+
+    -webkit-animation-iteration-count: 1;
+    animation-iteration-count: 1;
+}
+
+/* Firefox < 16 */
+@-moz-keyframes listfade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Internet Explorer */
+@-ms-keyframes listfade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Opera < 12.1 */
+@-o-keyframes listfade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes listfade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+
+/*
+ * BG Star Animation
+ */
+
+@function multi-box-shadow ($n) {
+  $value: '#{random(5000)}px #{random(5000)}px rgba(220,220,220,.8)';
+
+  @for $i from 2 through $n {
+    $value: '#{$value} , #{random(5000)}px #{random(5000)}px rgba(220,220,220,.8)';
+  }
+
+  @return unquote($value);
+}
+
+$shadow-sm: multi-box-shadow(3000);
+$shadow-md: multi-box-shadow(1000);
+$shadow-lg: multi-box-shadow(500);
+
+#stars-1 {
+  width: 1px;
+  height: 1px;
+  background: transparent;
+  box-shadow: $shadow-sm;
+  animation: animateStars 100s linear infinite;
+
+  &:after {
+    content: " ";
+    position: absolute;
+    top: 5000px;
+    width: 1px;
+    height: 1px;
+    background: transparent;
+    box-shadow: $shadow-sm;
+  }
+}
+
+#stars-2 {
+  width: 2px;
+  height: 2px;
+  background: transparent;
+  box-shadow: $shadow-md;
+  animation: animateStars 120s linear infinite;
+
+  &:after {
+    content: " ";
+    position: absolute;
+    top: 5000px;
+    width: 2px;
+    height: 2px;
+    background: transparent;
+    box-shadow: $shadow-md;
+  }
+}
+
+#stars-3 {
+  width: 2.5px;
+  height: 2.5px;
+  background: transparent;
+  box-shadow: $shadow-lg;
+  animation: animateStars 150s linear infinite;
+
+    &:after {
+      content: " ";
+      position: absolute;
+      top: 5000px;
+      width: 3px;
+      height: 3px;
+      background: transparent;
+      box-shadow: $shadow-lg;
+    }
+}
+
+/* Firefox < 16 */
+@-moz-keyframes animateStars {
+  from { transform: translateY(0px); }
+  to { transform: translateY(-5000px); }
+}
+
+/* Internet Explorer */
+@-ms-keyframes animateStars {
+  from { transform: translateY(0px); }
+  to { transform: translateY(-5000px); }
+}
+
+/* Opera < 12.1 */
+@-o-keyframes animateStars {
+  from { transform: translateY(0px); }
+  to { transform: translateY(-5000px); }
+}
+
+@keyframes animateStars {
+  from { transform: translateY(0px); }
+  to { transform: translateY(-5000px); }
+}
+
+
+/*
+ * Change Spots Animation
+ */
+
+// @keyframes hoverboard-glow{
+//   to {
+//     filter: opacity(.7);
+//   }
+// }
+//
+// @keyframes change{
+//   from { background: rgba(255,255,255,.3); }
+//   to { background: rgba(0,0,0,.2); transform: rotate3d(1,0,0,360deg); }
+// }
+//
+// ul.leaders{
+//   > li{
+//     will-change: transform;
+//
+//     &.change{
+//       animation: change 1s ease;
+//     }
+//   }
+// }

@@ -1,0 +1,13 @@
+
+bower_components
+node_modules
+.idea
+npm-debug.log
+
+client/css/.o
+client/css/.o.map
+client/css/.sass-cache
+
+dist
+
+build_files/*.spec

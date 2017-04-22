@@ -1,0 +1,82 @@
+{
+    "k0": {
+        "gamerID": "Kyle Buchanan",
+        "ping": {
+            "hiscore": 133778,
+            "color": "#5D9BFE"
+        }
+    },
+    "k1": {
+        "gamerID": "Mark Caron",
+        "ping": {
+            "hiscore": 10,
+            "color": "#E7E746"
+        }
+    },
+    "k2": {
+        "gamerID": "Emily Woodham",
+        "ping": {
+            "hiscore": 1638819,
+            "color": "#26BF4A"
+        }
+    },
+    "k3": {
+        "gamerID": "Dan Bolton",
+        "ping": {
+            "hiscore": 1200,
+            "color": "#5D9BFE"
+        }
+    },
+    "k4": {
+        "gamerID": "Michael Clayton",
+        "ping": {
+            "hiscore": 1336,
+            "color": "#26BF4A"
+        }
+    },
+    "k5": {
+        "gamerID": "Jared Sprague",
+        "ping": {
+            "hiscore": 1273,
+            "color": "#F72C2C"
+        }
+    },
+    "k6": {
+        "gamerID": "Krystal Moore",
+        "ping": {
+            "hiscore": 800,
+            "color": "#E7E746"
+        }
+    },
+    "k7": {
+        "gamerID": "Lauren Bristol",
+        "ping": {
+            "hiscore": 4336,
+            "color": "#26BF4A"
+        }
+    },
+    "k8": {
+        "gamerID": "Homa Seyed",
+        "ping": {
+            "hiscore": 3336,
+            "color": "#26BF4A"
+        }
+    },
+    "k9": {
+        "gamerID": "Erik Newby",
+        "ping": {
+            "hiscore": 336,
+            "color": "#26BF4A"
+        }
+    },
+    "k10": {
+        "gamerID": "Peter Piper"
+    },
+    "k11": {
+        "gamerID": "Allyson Barnhart",
+        "ping": {
+            "hiscore": 2089,
+            "color": "#26BF4A"
+        }
+    }
+}

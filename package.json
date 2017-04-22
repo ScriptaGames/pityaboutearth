@@ -1,0 +1,20 @@
+{
+  "name": "pity-about-earth",
+  "version": "1.0.0",
+  "description": "A videogame Ludum Dare 38.",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "echo \"Play nice!\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "browser-sync start --server --serveStatic src --files 'src/**/*' --no-inject-changes --directory",
+    "build": "mkdir -p dist && cp -r src/* dist && babel src --out-dir dist --presets=env --ignore lib/*"
+  },
+  "author": "mwcz <mwc@clayto.com>",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-preset-env": "^1.1.6",
+    "browser-sync": "^2.18.2"
+  },
+  "dependencies": {}
+}

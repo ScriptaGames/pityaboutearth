@@ -1,0 +1,40 @@
+<article class="table">
+  <section class="table-cell">
+    <h1 class="leaders-header"></h1>
+    <ul class="leader-titles">
+      <li>
+        <span class="rank">Rank</span>
+        <span class="username">Leaders</span>
+        <span class="score">Score</span>
+      </li>
+    </ul>
+    <ul class="leaders fade">
+      <li ng-repeat="leader in vm.leaders">
+        <span class="rank">{{::$index + 1 | ordinal}}</span>
+        <span class="username">{{::leader.name}}</span>
+        <span class="score">{{::leader.score}}</span>
+      </li>
+    </ul>
+  </section>
+</article>
+
+
+
+
+<!-- <table>
+    <thead>
+        <tr>
+            <th>Rank</th>
+            <th>Username</th>
+            <th class="score">Score</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="leader in vm.leaders">
+            <td>{{::$index + 1 | ordinal}}</td>
+            <td>{{::leader.gamerID}}</td>
+            <td class="score">{{::leader.ping.hiscore}}</td>
+        </tr>
+    </tbody>
+</table> -->
+ <!-- ng-style="{'color': leader.ping.color}" -->
