@@ -1,7 +1,16 @@
 class PlayState extends Phaser.State {
     create() {
         console.log('[play] starting play state');
+
+        window.play = this;
+
         this.createSounds();
+        this.createBackground();
+        this.createEarth();
+        this.createAsteroid();
+        this.createComet();
+        this.createBarrier();
+
         this.playMusic();
     }
 
@@ -33,6 +42,33 @@ class PlayState extends Phaser.State {
             Siren        : this.game.add.audio('Siren'),
             PlayMusic    : this.game.add.audio('PlayMusic'),
         };
+    }
+
+    createBackground() {
+        const bg = this.game.add.sprite(0, 0, 'background');
+        bg.scale.set(10, 10);
+    }
+
+    createEarth() {
+        this.earth = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'earth');
+        this.earth.scale.set(10, 10);
+        this.earth.anchor.set(0.5, 0.5);
+    }
+
+    createAsteroid() {
+        const ast = this.game.add.sprite(20, 26, 'asteroid');
+        ast.scale.set(10, 10);
+    }
+
+    createComet() {
+        const com = this.game.add.sprite(220, 26, 'comet');
+        com.scale.set(10, 10);
+    }
+
+    createBarrier() {
+        this.barrier = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'barrier');
+        this.barrier.scale.set(10, 10);
+        this.barrier.anchor.set(0.5, 0.5);
     }
 
     /* update functions */

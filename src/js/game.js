@@ -6,8 +6,8 @@ class Game extends Phaser.Game {
             Phaser.AUTO,
             'phaser-engage',
             null,
-            true,
-            true
+            false,
+            false
         );
 
         this.state.add('BootState'    , BootState    , false);
