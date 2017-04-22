@@ -1,17 +1,14 @@
 {
     "libs": [ "browser", "ecma5", "ecma6" ],
     "loadEagerly": [
-        "src/js/config.js",
-        "src/js/util.js",
-        "src/js/states/boot.js",
-        "src/js/states/preload.js",
-        "src/js/states/splash.js",
-        "src/js/states/intro.js",
-        "src/js/states/play.js",
-        "src/js/leap.js",
-        "src/js/day.js",
-        "src/js/animations.js",
-        "src/js/game.js",
-        "src/js/main.js"
+        "js/config.js",
+        "js/roles.js",
+        "js/states/boot.js",
+        "js/states/preload.js",
+        "js/states/menu.js",
+        "js/states/searching.js",
+        "js/states/play.js",
+        "js/game.js",
+        "js/main.js"
     ]
 }
