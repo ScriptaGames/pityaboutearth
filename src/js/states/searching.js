@@ -1,4 +1,7 @@
 class SearchingState extends Phaser.State {
+    init({ music }) {
+        this.music = music;
+    }
     create() {
         console.log('[searching] searching for opponent');
 
@@ -40,5 +43,9 @@ class SearchingState extends Phaser.State {
 
     next(playerRole) {
         this.game.stateTransition.to('PlayState', true, false, { playerRole });
+    }
+
+    shutdown() {
+        this.music.stop();
     }
 }

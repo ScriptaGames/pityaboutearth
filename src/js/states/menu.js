@@ -2,6 +2,7 @@ class MenuState extends Phaser.State {
 
     create() {
         console.log('[menu] showing main menu');
+
         this.music = this.game.add.audio('MenuMusic');
         this.music.play();
 
@@ -26,10 +27,6 @@ class MenuState extends Phaser.State {
     }
 
     next() {
-        this.game.stateTransition.to('SearchingState');
-    }
-
-    shutdown() {
-        this.music.stop();
+        this.game.stateTransition.to('SearchingState', true, false, { music: this.music });
     }
 }
