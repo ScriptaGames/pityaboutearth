@@ -21,7 +21,14 @@ class PlayState extends Phaser.State {
     update() {
         this.updateCollisions();
         this.updateControls();
-        this.updateBarrierRotation();
+
+        if (this.isHumanity()) {
+            this.updateBarrierRotation();
+        }
+
+        if (this.isUniverse()) {
+            this.updateAttackPlacement();
+        }
     }
 
     render() {
@@ -43,10 +50,18 @@ class PlayState extends Phaser.State {
         this.actors = {
             earth: this.createEarth(),
             barrier: this.createBarrier(),
-            // comet and asteroid only populated here for testing
-            comets: [this.createComet()],
-            asteroids: [this.createAsteroid()],
+            placementAsteroid: this.createAsteroid(false),
+            placementComet: this.createComet(false),
+            asteroids: this.game.add.group(),
+            comets: this.game.add.group(),
         };
+
+        // these two are just used for attack placement, they shouldn't exist
+        // until attack placement happens
+        this.actors.placementAsteroid.exists = false;
+        this.actors.placementAsteroid.alpha = 0.5;
+        this.actors.placementComet.exists = false;
+        this.actors.placementComet.alpha = 0.5;
     }
 
     createSounds() {
@@ -79,9 +94,15 @@ class PlayState extends Phaser.State {
         return earth;
     }
 
-    createAsteroid() {
+    createAsteroid(addToGroup=true) {
         const ast = this.game.add.sprite(20, 26, 'asteroid');
         ast.scale.set(10, 10);
+        ast.anchor.set(0.5, 0.5);
+        ast.bringToTop();
+
+        if (addToGroup) {
+            this.actors.asteroids.add(ast);
+        }
 
         // DEBUG
         ast.inputEnabled = true;
@@ -90,9 +111,15 @@ class PlayState extends Phaser.State {
         return ast;
     }
 
-    createComet() {
+    createComet(addToGroup=true) {
         const com = this.game.add.sprite(220, 26, 'comet');
         com.scale.set(10, 10);
+        com.anchor.set(0.5, 0.5);
+        com.bringToTop();
+
+        if (addToGroup) {
+            this.actors.comets.add(com);
+        }
 
         // DEBUG
         com.inputEnabled = true;
@@ -122,14 +149,46 @@ class PlayState extends Phaser.State {
     }
 
     updateBarrierRotation() {
-        if (this.isHumanity()) {
-            const x = this.game.input.mousePointer.x - this.actors.barrier.position.x;
-            const y = this.game.input.mousePointer.y - this.actors.barrier.position.y;
-            let angle = -1 * Math.atan(x/y) + 2*Math.PI;
-            if (y > 0) {
-                angle += Math.PI;
+        const x = this.game.input.mousePointer.x - this.actors.barrier.position.x;
+        const y = this.game.input.mousePointer.y - this.actors.barrier.position.y;
+        let angle = -1 * Math.atan(x/y) + 2*Math.PI;
+        if (y > 0) {
+            angle += Math.PI;
+        }
+        this.actors.barrier.rotation = angle;
+    }
+
+    updateAttackPlacement() {
+        const x = this.game.input.mousePointer.x;
+        const y = this.game.input.mousePointer.y;
+        if (this.game.input.mousePointer.justReleased()) {
+            // now that mouse is released, figure out whether player had
+            // asteroid or comet selected, and add it to the scene
+            if (this.actors.placementAsteroid.exists) {
+                const ast = this.createAsteroid();
+                ast.position.copyFrom(this.game.input.mousePointer);
             }
-            this.actors.barrier.rotation = angle;
+            else if (this.actors.placementComet.exists) {
+                const com = this.createComet();
+                com.position.copyFrom(this.game.input.mousePointer);
+            }
+
+            // and disable both placement sprites until next time
+            this.actors.placementAsteroid.exists = false;
+            this.actors.placementComet.exists = false;
+        }
+        if (this.game.input.mousePointer.isDown) {
+            console.log(`[play] place asteroid at ${x},${y}`);
+            const timePressed = new Date().getTime() - this.game.input.mousePointer.timeDown;
+            if (timePressed < config.COMET_PRESS_DELAY) {
+                this.actors.placementAsteroid.exists = true;
+                this.actors.placementAsteroid.position.copyFrom(this.game.input.mousePointer);
+            }
+            else {
+                this.actors.placementAsteroid.exists = false;
+                this.actors.placementComet.exists = true;
+                this.actors.placementComet.position.copyFrom(this.game.input.mousePointer);
+            }
         }
     }
 
