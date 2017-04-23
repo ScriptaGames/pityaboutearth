@@ -21,6 +21,7 @@ class PreloadState extends Phaser.State {
         this.game.load.spritesheet('asteroid-boom-sheet', 'images/big/asteroid-sheet.png', 10, 10);
         this.game.load.spritesheet('comet-sheet', 'images/big/comet-sheet.png', 16*10, 16*10);
         this.game.load.spritesheet('comet-boom-sheet', 'images/big/comet-sheet.png', 10, 10);
+        this.game.load.spritesheet('transport-sheet', 'images/big/transport-sheet.png', 16*10, 16*10);
         // this.game.load.spritesheet('sheet', 'images/sheet.png', 44, 44, 30);
 
         // audio

@@ -30,4 +30,10 @@ const config = Object.freeze({
     // How much variance in initial velocity for each ast in barrage
     BARRAGE_VARIANCE: 25,
 
+    // initial transport speed
+    TRANSPORT_SPEED: 100,
+
+    // how fast the transports accelerate away from earth
+    TRANSPORT_ACCELERATION: 10,
+
 });

@@ -9,6 +9,7 @@ class PlayState extends Phaser.State {
         this.createSounds();
 
         this.createActors();
+        this.generateTransportSpawnPoints();
         this.createMissileLauncher();
 
         this.playMusic();
@@ -16,6 +17,7 @@ class PlayState extends Phaser.State {
         this.game.time.events.loop(1000, this.createAsteroid, this);
         this.game.time.events.loop(5000, this.createComet, this);
         this.game.time.events.loop(20000, this.createBarrage, this);
+        this.game.time.events.loop(5000, this.launchTransport, this);
 
     }
 
@@ -46,6 +48,7 @@ class PlayState extends Phaser.State {
             comets: this.game.add.group(),
             missiles: this.game.add.group(),
             booms: this.game.add.group(),
+            transports: this.game.add.group(),
         };
 
     }
@@ -344,6 +347,40 @@ class PlayState extends Phaser.State {
         this.sounds.PlayMusic.fadeIn(300);
     }
 
+    launchTransport() {
+        let index = this.game.rnd.between(0, this.transportSpawnPoints.length - 1);
+        let point = this.transportSpawnPoints[index];
+        let transport = this.game.add.sprite(point.x, point.y, 'transport-sheet');
+
+        transport.anchor.set(0.5, 0.5);
+        transport.bringToTop();
+
+        this.game.physics.arcade.enableBody(transport);
+        transport.body.setCircle(transport.width / 2);
+
+        this.actors.transports.add(transport);
+
+        // play engine fire animation
+        transport.animations.add('afterburner');
+        transport.animations.play('afterburner', 20, true);
+
+        // set a direction away from the center
+        let direction = Phaser.Point.subtract(this.actors.earth.position, transport.position);
+        direction.normalize();
+        direction.multiply(config.TRANSPORT_SPEED, config.TRANSPORT_SPEED);
+        transport.body.velocity.set(-direction.x, -direction.y);
+
+        // rotate the ship so it's pointing in the right direction
+        let x = transport.position.x + transport.body.velocity.x;
+        let y = transport.position.y + transport.body.velocity.y;
+        transport.rotation = this.game.physics.arcade.angleToXY(transport, x, y);
+        transport.rotation += Math.PI / 2;
+
+        // Set acceleration
+        transport.body.acceleration.set(transport.body.velocity.x * config.TRANSPORT_ACCELERATION,
+            transport.body.velocity.y * config.TRANSPORT_ACCELERATION);
+    }
+
     fireMissile({ position }) {
         const missile = this.createMissile();
         const { x, y } = position;
@@ -441,5 +478,24 @@ class PlayState extends Phaser.State {
         let f = functions[self.game.rnd.between(0, functions.length-1)];
 
         return f();
+    }
+
+    generateTransportSpawnPoints(count=36) {
+        this.transportSpawnPoints = [];
+
+        let x, y;
+        let angle = 360 / count;
+
+        // console.log()
+
+        // spawn asteroids in a circle
+        for (let i = 0.1; i < 360; i += angle) {
+            x = this.game.world.centerX + 100 * Math.cos(i);
+            y = this.game.world.centerY + 100 * Math.sin(i);
+
+            this.transportSpawnPoints.push({x, y});
+        }
+
+        console.log(this.transportSpawnPoints);
     }
 }
