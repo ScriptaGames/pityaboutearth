@@ -6,8 +6,8 @@
   "scripts": {
     "postinstall": "echo \"Play nice!\"",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "browser-sync start --server --serveStatic src/client --files 'src/client/**/*' --no-inject-changes --directory",
-    "build": "mkdir -p dist && cp -r src/client/* dist && babel src/client --out-dir dist --presets=env --ignore lib/*"
+    "start": "browser-sync start --server --serveStatic src/ --files 'src/**/*' --no-inject-changes --directory",
+    "build": "mkdir -p dist && cp -r src/* dist && babel src/ --out-dir dist --presets=env --ignore lib/*"
   },
   "author": "TeamScripta <admin@scripta.co>",
   "contributors": [
