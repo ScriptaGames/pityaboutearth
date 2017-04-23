@@ -7,7 +7,6 @@ class MenuState extends Phaser.State {
         this.music.play();
 
         const bg = this.game.add.sprite(0, 0, 'background');
-        bg.scale.set(10, 10);
         bg.tint = 0x3f3f3f;
 
         this.scoreText = game.add.text(game.world.centerX, 4, "MAIN MENU", { fill: "#ffffff", align: "center" });
@@ -22,8 +21,6 @@ class MenuState extends Phaser.State {
             this
         );
         btnHum.anchor.set(0.5, 1);
-        btnHum.scale.set(4, 4);
-
     }
 
     next() {

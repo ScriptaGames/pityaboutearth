@@ -19,13 +19,8 @@ class PlayState extends Phaser.State {
     }
 
     render() {
-        // for (const block of this.capturedBlocks) {
-        //     this.game.debug.body(block);
-        // }
-        // for (const block of this.blockSprites) {
-        //     this.game.debug.body(block);
-        // }
-        // this.game.debug.body(this.portalIn);
+        this.game.debug.body(this.actors.earth);
+        this.game.debug.body(this.actors.barrier);
     }
 
     shutdown() {
@@ -56,16 +51,18 @@ class PlayState extends Phaser.State {
 
     createBackground() {
         const bg = this.game.add.sprite(0, 0, 'background');
-        bg.scale.set(10, 10);
         return bg;
     }
 
     createEarth() {
         console.log('[play] creating earth');
         const earth = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'earth');
-        earth.scale.set(10, 10);
-        earth.anchor.set(0.5, 0.5);
 
+        this.game.physics.arcade.enableBody(earth);
+        earth.body.setCircle(earth.width / 2);
+        earth.body.immovable = true;
+
+        earth.anchor.set(0.5, 0.5);
         // DEBUG
         earth.inputEnabled = true;
         earth.events.onInputDown.add(() => this.sounds.Siren.play(), this);
@@ -74,10 +71,12 @@ class PlayState extends Phaser.State {
     }
 
     createAsteroid(addToGroup=true) {
-        const ast = this.game.add.sprite(20, 26, 'asteroid');
-        ast.scale.set(10, 10);
+        const ast = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY - 300, 'asteroid');
         ast.anchor.set(0.5, 0.5);
         ast.bringToTop();
+
+        this.game.physics.arcade.enableBody(ast);
+        ast.body.velocity.y = 100;
 
         if (addToGroup) {
             this.actors.asteroids.add(ast);
@@ -91,7 +90,7 @@ class PlayState extends Phaser.State {
 
     createComet(addToGroup=true) {
         const com = this.game.add.sprite(220, 26, 'comet');
-        com.scale.set(10, 10);
+        // com.scale.set(10, 10);
         com.anchor.set(0.5, 0.5);
         com.bringToTop();
 
@@ -107,7 +106,7 @@ class PlayState extends Phaser.State {
 
     createBarrier() {
         const barrier = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'barrier');
-        barrier.scale.set(10, 10);
+        // barrier.scale.set(10, 10);
         barrier.anchor.set(0.5, 0.5);
         return barrier;
     }
@@ -115,10 +114,8 @@ class PlayState extends Phaser.State {
     /* update functions */
 
     updateCollisions() {
-        // this.game.physics.arcade.collide(this.portalIn, this.blockSprites, null, this.blockOverlap, this);
-        // this.game.physics.arcade.collide(this.fallingVuln, [this.leftWall, this.rightWall]);
-        // this.game.physics.arcade.collide(this.portalIn, [this.leftWall, this.rightWall]);
-        // this.game.physics.arcade.collide(this.well, this.capturedBlocks, null, this.blockSplash, this);
+        this.game.physics.arcade.collide(this.actors.earth, this.actors.asteroids, null, this.asteroidStrike, this);
+        this.game.physics.arcade.collide(this.actors.earth, this.actors.comets, null, this.cometStrike, this);
     }
 
     updateBarrierRotation() {
@@ -132,6 +129,17 @@ class PlayState extends Phaser.State {
     }
 
     /* misc functions */
+
+    asteroidStrike(earth, asteroid) {
+        console.log('[play] asteroid strike');
+        this.sounds.AsteroidHit1.play();
+        asteroid.destroy();
+    }
+
+    cometStrike() {
+        console.log('[play] comet strike');
+        this.sounds.AsteroidHit2.play();
+    }
 
     playMusic() {
         this.sounds.PlayMusic.fadeIn(300);
