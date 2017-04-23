@@ -1,7 +1,7 @@
 const config = Object.freeze({
 
     // skip menu for quick testing
-    SKIP_MENU: !false,
+    SKIP_MENU: false,
 
     // canvas resolution
     CANVAS_WIDTH: 1180,
