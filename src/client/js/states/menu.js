@@ -27,6 +27,10 @@ class MenuState extends Phaser.State {
     }
 
     next() {
-        this.game.stateTransition.to('SearchingState', true, false, { music: this.music });
+        this.game.stateTransition.to('PlayState');
+    }
+
+    shutdown() {
+        this.music.stop();
     }
 }
