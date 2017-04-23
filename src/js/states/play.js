@@ -158,7 +158,8 @@ class PlayState extends Phaser.State {
     /* update functions */
 
     updateCollisions() {
-        this.game.physics.arcade.collide(this.actors.barrier, this.actors.asteroids, this.asteroidDeflect, this.asteroidBarrierOverlap, this);
+        this.game.physics.arcade.collide(this.actors.barrier, this.actors.comets, this.deflectCelestial, this.barrierOverlap, this);
+        this.game.physics.arcade.collide(this.actors.barrier, this.actors.asteroids, this.deflectCelestial, this.barrierOverlap, this);
         this.game.physics.arcade.collide(this.actors.earth, this.actors.asteroids, this.asteroidStrike, null, this);
         this.game.physics.arcade.collide(this.actors.earth, this.actors.comets, this.cometStrike, null, this);
     }
@@ -174,12 +175,12 @@ class PlayState extends Phaser.State {
     }
 
     updateCelestials() {
-        this.actors.asteroids.forEach(ast => {
-            this.game.physics.arcade.accelerateToObject(ast, this.actors.earth);
-        });
-        this.actors.comets.forEach(ast => {
-            this.game.physics.arcade.accelerateToObject(ast, this.actors.earth);
-        });
+        this.actors.asteroids.forEach(cel => this.updateCelestial(cel));
+        this.actors.comets.forEach(cel => this.updateCelestial(cel));
+    }
+
+    updateCelestial(cel) {
+        this.game.physics.arcade.accelerateToObject(cel, this.actors.earth);
     }
 
     /* misc functions */
@@ -191,28 +192,31 @@ class PlayState extends Phaser.State {
         this.game.camera.shake(config.ASTEROID_CAM_SHAKE_AMOUNT, config.ASTEROID_CAM_SHAKE_DURATION_MS);
     }
 
-    asteroidDeflect(barrier, asteroid) {
-        console.log('[play] asteroid deflect');
-        asteroid.destroy();
-    }
-
-    asteroidBarrierOverlap(barrier, asteroid) {
-        // find the angle between the barrier's center and the point where the
-        // asteroid is touching
-
-        const astPoint = asteroid.position.clone().subtract(this.game.world.centerX, this.game.world.centerY).normalize();
-        const barPoint = this.game.input.mousePointer.position.clone().subtract(this.game.world.centerX, this.game.world.centerY).normalize();
-
-        const distance = barPoint.distance(astPoint);
-
-        return distance < config.BARRIER_WIDTH;
-    }
-
     cometStrike(earth, comet) {
         console.log('[play] comet strike');
         this.sounds.AsteroidHit2.play();
         comet.destroy();
         this.game.camera.shake(config.COMET_CAM_SHAKE_AMOUNT, config.COMET_CAM_SHAKE_DURATION_MS);
+    }
+
+    deflectCelestial(barrier, cel) {
+        console.log('[play] celestial deflect');
+        const bounceDir = Phaser.Point.subtract(cel.position, this.actors.earth.position);
+        bounceDir.multiply(0.5, 0.5);
+        cel.body.velocity.copyFrom(bounceDir);
+        this.game.time.events.add(config.DEFLECT_BLINK_DURATION, () => cel.destroy(), this);
+    }
+
+    barrierOverlap(barrier, celestial) {
+        // find the angle between the barrier's center and the point where the
+        // asteroid is touching
+
+        const celPoint = celestial.position.clone().subtract(this.game.world.centerX, this.game.world.centerY).normalize();
+        const barPoint = this.game.input.mousePointer.position.clone().subtract(this.game.world.centerX, this.game.world.centerY).normalize();
+
+        const distance = barPoint.distance(celPoint);
+
+        return distance < config.BARRIER_WIDTH;
     }
 
     playMusic() {
