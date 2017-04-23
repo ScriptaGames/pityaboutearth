@@ -204,7 +204,21 @@ class PlayState extends Phaser.State {
         const bounceDir = Phaser.Point.subtract(cel.position, this.actors.earth.position);
         bounceDir.multiply(0.5, 0.5);
         cel.body.velocity.copyFrom(bounceDir);
-        this.game.time.events.add(config.DEFLECT_BLINK_DURATION, () => cel.destroy(), this);
+
+        const destroyTween = this.game.add
+            .tween(cel)
+            .to(
+                {
+                    alpha: 0.6,
+                },
+                config.DEFLECT_BLINK_DURATION,
+                Phaser.Easing.Linear.None,
+                true,
+                0,
+                10,
+                true
+            );
+        destroyTween.onComplete.add(() => cel.destroy(), this);
     }
 
     barrierOverlap(barrier, celestial) {

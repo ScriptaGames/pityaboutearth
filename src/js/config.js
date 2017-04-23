@@ -17,7 +17,7 @@ const config = Object.freeze({
     COMET_CAM_SHAKE_DURATION_MS: 0.5 * Phaser.Timer.SECOND,
 
     // after celestial is deflectd, how long does it blink before it disappears
-    DEFLECT_BLINK_DURATION: 1 * Phaser.Timer.SECOND,
+    DEFLECT_BLINK_DURATION: 0.04 * Phaser.Timer.SECOND,
 
     // how wide is the barrier (in degrees)
     BARRIER_WIDTH: 0.6,

@@ -2,11 +2,9 @@
     "libs": [ "browser", "ecma5", "ecma6" ],
     "loadEagerly": [
         "js/config.js",
-        "js/roles.js",
         "js/states/boot.js",
         "js/states/preload.js",
         "js/states/menu.js",
-        "js/states/searching.js",
         "js/states/play.js",
         "js/game.js",
         "js/main.js"
