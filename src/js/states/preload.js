@@ -21,13 +21,24 @@ class PreloadState extends Phaser.State {
 
         // audio
 
-        this.game.load.audio('AsteroidHit1', 'sounds/Effects/Effect_AsteroidHit1.ogg');
-        this.game.load.audio('AsteroidHit2', 'sounds/Effects/Effect_AsteroidHit2.ogg');
-        this.game.load.audio('ButtonTap', 'sounds/Effects/Effect_ButtonTap.ogg');
-        this.game.load.audio('Random', 'sounds/Effects/Effect_Random.ogg');
-        this.game.load.audio('Siren', 'sounds/Effects/Effect_Siren.ogg');
         this.game.load.audio('MenuMusic', 'sounds/Songs/MainMenu_Track.ogg');
         this.game.load.audio('PlayMusic', 'sounds/Songs/Playing_Track.ogg');
+        this.game.load.audio('VictoryMusic', 'sounds/Songs/Victory_Track.ogg');
+        this.game.load.audio('DefeatMusic', 'sounds/Songs/Defeat_Track.ogg');
+
+        this.game.load.audio('AsteroidHit1'  , 'sounds/Effects/Effect_AsteroidHit1.ogg');
+        this.game.load.audio('AsteroidHit2'  , 'sounds/Effects/Effect_AsteroidHit2.ogg');
+        this.game.load.audio('ButtonTap'     , 'sounds/Effects/Effect_ButtonTap.ogg');
+        this.game.load.audio('DropExplosion' , 'sounds/Effects/Effect_DropExplosion.ogg');
+        this.game.load.audio('EscapeLaunch2' , 'sounds/Effects/Effect_EscapeLaunch2.ogg');
+        this.game.load.audio('EscapeLaunch'  , 'sounds/Effects/Effect_EscapeLaunch.ogg');
+        this.game.load.audio('Random'        , 'sounds/Effects/Effect_Random.ogg');
+        this.game.load.audio('Random2'       , 'sounds/Effects/Effect_Random2.ogg');
+        this.game.load.audio('Random3'       , 'sounds/Effects/Effect_Random3.ogg');
+        this.game.load.audio('Random4'       , 'sounds/Effects/Effect_Random4.ogg');
+        this.game.load.audio('Random5'       , 'sounds/Effects/Effect_Random5.ogg');
+        this.game.load.audio('Random6'       , 'sounds/Effects/Effect_Random6.ogg');
+        this.game.load.audio('Siren'         , 'sounds/Effects/Effect_Siren.ogg');
 
         // shaders
 
