@@ -110,7 +110,8 @@ class PlayState extends Phaser.State {
                 group = this.actors.asteroids;
         }
 
-        const celestial = this.game.add.sprite(Math.random() * this.game.world.width, Math.random() * this.game.world.height, type + '-sheet', Math.floor(Math.random()*frameRange));
+        let point = this.getRandomOffscreenPoint();
+        const celestial = this.game.add.sprite(point.x, point.y, type + '-sheet', Math.floor(Math.random()*frameRange));
         celestial.anchor.set(0.5, 0.5);
         celestial.bringToTop();
 
@@ -197,5 +198,41 @@ class PlayState extends Phaser.State {
 
     playMusic() {
         this.sounds.PlayMusic.fadeIn(300);
+    }
+
+    getRandomOffscreenPoint() {
+        let self = this;
+        let padding = 200;
+
+        let functions = [
+            () => {
+                // LEFT
+                let x = -padding;
+                let y = self.game.rnd.between(0, self.game.world.height);
+                return {x, y};
+            },
+            () => {
+                // RIGHT
+                let x = self.game.world.width + padding;
+                let y = self.game.rnd.between(0, self.game.world.height);
+                return {x, y};
+            },
+            () => {
+                // TOP
+                let x = self.game.rnd.between(0, self.game.world.width);
+                let y = -padding;
+                return {x, y};
+            },
+            () => {
+                // BOTTOM
+                let x = self.game.rnd.between(0, self.game.world.width);
+                let y = self.game.world.height + padding;
+                return {x, y};
+            },
+        ];
+
+        let f = functions[self.game.rnd.between(0, functions.length-1)];
+
+        return f();
     }
 }
