@@ -14,6 +14,7 @@ class PlayState extends Phaser.State {
 
         setInterval(() => this.createAsteroid(), 1000);
         setInterval(() => this.createComet(), 5000);
+        setInterval(() => this.createBarrage(), 20000)
 
     }
 
@@ -114,6 +115,32 @@ class PlayState extends Phaser.State {
         group.add(celestial);
 
         return celestial;
+    }
+
+    createBarrage(count=60, radius=1200) {
+        let x, y;
+        let angle = 360 / count;
+
+        // spawn asteroids in a circle
+        for (let i = 0; i < 360; i += angle) {
+            x = this.game.world.centerX + radius * Math.cos(i);
+            y = this.game.world.centerY + radius * Math.sin(i);
+
+            let ast = this.createAsteroid();
+            ast.position.x = x;
+            ast.position.y = y;
+
+            // set initial velocity
+            let direction = Phaser.Point.subtract(this.actors.earth.position, ast.position);
+
+            direction.normalize();
+            direction.multiply(config.BARRAGE_SPEED, config.BARRAGE_SPEED);
+
+            let vx = this.game.rnd.between(-config.BARRAGE_VARIANCE, config.BARRAGE_VARIANCE);
+            let vy = this.game.rnd.between(-config.BARRAGE_VARIANCE, config.BARRAGE_VARIANCE);
+
+            ast.body.velocity.set(direction.x + vx, direction.y + vy);
+        }
     }
 
     createBarrier() {

@@ -19,4 +19,10 @@ const config = Object.freeze({
     // how wide is the barrier (in degrees)
     BARRIER_WIDTH: 0.6,
 
+    // initial velocity of barrage
+    BARRAGE_SPEED: 200,
+
+    // How much variance in initial velocity for each ast in barrage
+    BARRAGE_VARIANCE: 25,
+
 });
