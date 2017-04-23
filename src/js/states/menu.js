@@ -34,4 +34,8 @@ class MenuState extends Phaser.State {
     shutdown() {
         this.music.stop();
     }
+
+    story() {
+        return `There is nowhere else, at least in the near future, to which our species could migrate... Like it or not, for the moment the Earth is where we make our stand.`;
+    }
 }
