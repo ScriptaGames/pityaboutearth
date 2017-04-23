@@ -11,6 +11,10 @@ class PlayState extends Phaser.State {
         this.createActors();
 
         this.playMusic();
+
+        setInterval(() => this.createAsteroid(), 1000);
+        setInterval(() => this.createComet(), 5000);
+
     }
 
     update() {
@@ -52,8 +56,7 @@ class PlayState extends Phaser.State {
     }
 
     createBackground() {
-        const bg = this.game.add.sprite(0, 0, 'background');
-        return bg;
+        return this.game.add.sprite(0, 0, 'background');
     }
 
     createEarth() {
@@ -72,51 +75,49 @@ class PlayState extends Phaser.State {
         return earth;
     }
 
-    createAsteroid(addToGroup=true) {
-        const ast = this.game.add.sprite(Math.random() * this.game.world.width, Math.random() * this.game.world.height, 'asteroid-sheet', Math.floor(Math.random()*4));
-        ast.anchor.set(0.5, 0.5);
-        ast.bringToTop();
-
-        this.game.physics.arcade.enableBody(ast);
-        ast.body.setCircle(ast.width / 2);
-        ast.body.velocity.set(Math.random() * 40, Math.random() * 40);
-        ast.body.angularVelocity = 2*(12 * Math.random() - 6);
-
-        if (addToGroup) {
-            this.actors.asteroids.add(ast);
-        }
-
-        // acclerate the asteroid towards earth
-        this.game.physics.arcade.accelerateToObject(ast, this.actors.earth);
-
-        // DEBUG
-        ast.inputEnabled = true;
-
-        return ast;
+    createAsteroid() {
+        return this.createCelestial('asteroid');
     }
 
-    createComet(addToGroup=true) {
-        const com = this.game.add.sprite(Math.random() * this.game.world.width, Math.random() * this.game.world.height, 'comet-sheet', Math.floor(Math.random()*2));
-        // com.scale.set(10, 10);
-        com.anchor.set(0.5, 0.5);
-        com.bringToTop();
+    createComet() {
+        return this.createCelestial('comet');
+    }
 
-        this.game.physics.arcade.enableBody(com);
-        com.body.setCircle(com.width / 2);
-        com.body.velocity.set(Math.random() * 40, Math.random() * 40);
-        com.body.angularVelocity = 4 * Math.random();
-
-        if (addToGroup) {
-            this.actors.comets.add(com);
+    createCelestial(type) {
+        let frameRange;
+        let group;
+        switch (type.toLowerCase()) {
+            case 'asteroid':
+                frameRange = 4;
+                group = this.actors.asteroids;
+                break;
+            case 'comet':
+                frameRange = 2;
+                group = this.actors.comets;
+                break;
+            default:
+                frameRange = 4;
+                group = this.actors.asteroids;
         }
 
-        // acclerate the comet towards earth
-        this.game.physics.arcade.accelerateToObject(com, this.actors.earth);
+        const celestial = this.game.add.sprite(Math.random() * this.game.world.width, Math.random() * this.game.world.height, type + '-sheet', Math.floor(Math.random()*frameRange));
+        celestial.anchor.set(0.5, 0.5);
+        celestial.bringToTop();
+
+        this.game.physics.arcade.enableBody(celestial);
+        celestial.body.setCircle(celestial.width / 2);
+        celestial.body.velocity.set(Math.random() * 40, Math.random() * 40);
+        celestial.body.angularVelocity = 2*(12 * Math.random() - 6);
+
+        group.add(celestial);
+
+        // acclerate the asteroid towards earth
+        this.game.physics.arcade.accelerateToObject(celestial, this.actors.earth);
 
         // DEBUG
-        com.inputEnabled = true;
+        celestial.inputEnabled = true;
 
-        return com;
+        return celestial;
     }
 
     createBarrier() {
