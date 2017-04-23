@@ -19,8 +19,10 @@ class PlayState extends Phaser.State {
     }
 
     render() {
-        this.game.debug.body(this.actors.earth);
-        this.game.debug.body(this.actors.barrier);
+        // this.game.debug.body(this.actors.earth);
+        // this.game.debug.body(this.actors.barrier);
+        // this.actors.asteroids.forEach(this.game.debug.body.bind(this.game.debug));
+        // this.actors.comets.forEach(this.game.debug.body.bind(this.game.debug));
     }
 
     shutdown() {
@@ -71,16 +73,20 @@ class PlayState extends Phaser.State {
     }
 
     createAsteroid(addToGroup=true) {
-        const ast = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY - 300, 'asteroid');
+        const ast = this.game.add.sprite(Math.random() * this.game.world.width, Math.random() * this.game.world.height, 'asteroid-sheet', Math.floor(Math.random()*4));
         ast.anchor.set(0.5, 0.5);
         ast.bringToTop();
 
         this.game.physics.arcade.enableBody(ast);
-        ast.body.velocity.y = 100;
+        ast.body.setCircle(ast.width / 2);
+        ast.body.velocity.set(Math.random() * 40, Math.random() * 40);
 
         if (addToGroup) {
             this.actors.asteroids.add(ast);
         }
+
+        // acclerate the asteroid towards earth
+        this.game.physics.arcade.accelerateToObject(ast, this.actors.earth);
 
         // DEBUG
         ast.inputEnabled = true;
@@ -89,14 +95,21 @@ class PlayState extends Phaser.State {
     }
 
     createComet(addToGroup=true) {
-        const com = this.game.add.sprite(220, 26, 'comet');
+        const com = this.game.add.sprite(Math.random() * this.game.world.width, Math.random() * this.game.world.height, 'comet-sheet', Math.floor(Math.random()*2));
         // com.scale.set(10, 10);
         com.anchor.set(0.5, 0.5);
         com.bringToTop();
 
+        this.game.physics.arcade.enableBody(com);
+        com.body.setCircle(com.width / 2);
+        com.body.velocity.set(Math.random() * 40, Math.random() * 40);
+
         if (addToGroup) {
             this.actors.comets.add(com);
         }
+
+        // acclerate the comet towards earth
+        this.game.physics.arcade.accelerateToObject(com, this.actors.earth);
 
         // DEBUG
         com.inputEnabled = true;
@@ -136,9 +149,10 @@ class PlayState extends Phaser.State {
         asteroid.destroy();
     }
 
-    cometStrike() {
+    cometStrike(earth, comet) {
         console.log('[play] comet strike');
         this.sounds.AsteroidHit2.play();
+        comet.destroy();
     }
 
     playMusic() {
