@@ -18,15 +18,24 @@ class PlayState extends Phaser.State {
     }
 
     update() {
+        this.i = this.i || 1;
+        if (this.i % 60 === 0) {
+            const ast = this.createAsteroid();
+            ast.position.set(this.game.world.centerX, 80);
+            ast.body.velocity.set(0, 80);
+        }
+        this.i++;
+
+        this.updateAsteroids();
         this.updateCollisions();
         this.updateBarrierRotation();
     }
 
     render() {
-        // this.game.debug.body(this.actors.earth);
-        // this.game.debug.body(this.actors.barrier);
-        // this.actors.asteroids.forEach(this.game.debug.body.bind(this.game.debug));
-        // this.actors.comets.forEach(this.game.debug.body.bind(this.game.debug));
+        this.game.debug.body(this.actors.earth);
+        this.game.debug.body(this.actors.barrier);
+        this.actors.asteroids.forEach(this.game.debug.body.bind(this.game.debug));
+        this.actors.comets.forEach(this.game.debug.body.bind(this.game.debug));
     }
 
     shutdown() {
@@ -111,12 +120,6 @@ class PlayState extends Phaser.State {
 
         group.add(celestial);
 
-        // acclerate the asteroid towards earth
-        this.game.physics.arcade.accelerateToObject(celestial, this.actors.earth);
-
-        // DEBUG
-        celestial.inputEnabled = true;
-
         return celestial;
     }
 
@@ -124,14 +127,20 @@ class PlayState extends Phaser.State {
         const barrier = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'barrier');
         // barrier.scale.set(10, 10);
         barrier.anchor.set(0.5, 0.5);
+
+        this.game.physics.arcade.enableBody(barrier);
+        barrier.body.setCircle(barrier.width / 2);
+        barrier.body.immovable = true;
+
         return barrier;
     }
 
     /* update functions */
 
     updateCollisions() {
-        this.game.physics.arcade.collide(this.actors.earth, this.actors.asteroids, null, this.asteroidStrike, this);
-        this.game.physics.arcade.collide(this.actors.earth, this.actors.comets, null, this.cometStrike, this);
+        this.game.physics.arcade.collide(this.actors.barrier, this.actors.asteroids, this.asteroidDeflect, this.asteroidBarrierOverlap, this);
+        this.game.physics.arcade.collide(this.actors.earth, this.actors.asteroids, this.asteroidStrike, null, this);
+        this.game.physics.arcade.collide(this.actors.earth, this.actors.comets, this.cometStrike, null, this);
     }
 
     updateBarrierRotation() {
@@ -144,6 +153,12 @@ class PlayState extends Phaser.State {
         this.actors.barrier.rotation = angle;
     }
 
+    updateAsteroids() {
+        this.actors.asteroids.forEach(ast => {
+            this.game.physics.arcade.accelerateToObject(ast, this.actors.earth);
+        });
+    }
+
     /* misc functions */
 
     asteroidStrike(earth, asteroid) {
@@ -151,6 +166,27 @@ class PlayState extends Phaser.State {
         this.sounds.AsteroidHit1.play();
         asteroid.destroy();
         this.game.camera.shake(config.ASTEROID_CAM_SHAKE_AMOUNT, config.ASTEROID_CAM_SHAKE_DURATION_MS);
+    }
+
+    asteroidDeflect(barrier, asteroid) {
+        console.log('[play] asteroid deflect');
+        asteroid.destroy();
+    }
+
+    asteroidBarrierOverlap(barrier, asteroid) {
+        console.log('[play] asteroid barrier overlap');
+
+        // find the angle between the barrier's center and the point where the
+        // asteroid is touching
+
+        const astPoint = asteroid.position.clone().subtract(this.game.world.centerX, this.game.world.centerY).normalize();
+        const barPoint = this.game.input.mousePointer.position.clone().subtract(this.game.world.centerX, this.game.world.centerY).normalize();
+
+        const angle = Math.atan((barPoint.y - astPoint.y) / (barPoint.x - astPoint.x)) * 180 / Math.PI;
+
+        console.log(`[play] ${angle} rad -> ${astPoint} vs ${barPoint}`);
+
+        return Math.abs(angle) < config.BARRIER_WIDTH;
     }
 
     cometStrike(earth, comet) {
