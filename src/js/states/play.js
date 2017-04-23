@@ -12,21 +12,12 @@ class PlayState extends Phaser.State {
 
         this.playMusic();
 
-        // setInterval(() => this.createAsteroid(), 1000);
-        // setInterval(() => this.createComet(), 5000);
+        setInterval(() => this.createAsteroid(), 1000);
+        setInterval(() => this.createComet(), 5000);
 
     }
 
     update() {
-        this.i = this.i || 1;
-        if (this.i % 60 === 0) {
-            const ast = this.createAsteroid();
-            // ast.position.set(this.game.world.centerX, this.game.world.height - 80);
-            ast.position.set(0, this.game.world.height - 80);
-            ast.body.velocity.set(80, -80);
-        }
-        this.i++;
-
         this.updateAsteroids();
         this.updateCollisions();
         this.updateBarrierRotation();
