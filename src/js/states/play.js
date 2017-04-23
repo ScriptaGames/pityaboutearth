@@ -80,6 +80,7 @@ class PlayState extends Phaser.State {
         this.game.physics.arcade.enableBody(ast);
         ast.body.setCircle(ast.width / 2);
         ast.body.velocity.set(Math.random() * 40, Math.random() * 40);
+        ast.body.angularVelocity = 2*(12 * Math.random() - 6);
 
         if (addToGroup) {
             this.actors.asteroids.add(ast);
@@ -103,6 +104,7 @@ class PlayState extends Phaser.State {
         this.game.physics.arcade.enableBody(com);
         com.body.setCircle(com.width / 2);
         com.body.velocity.set(Math.random() * 40, Math.random() * 40);
+        com.body.angularVelocity = 4 * Math.random();
 
         if (addToGroup) {
             this.actors.comets.add(com);
@@ -147,12 +149,14 @@ class PlayState extends Phaser.State {
         console.log('[play] asteroid strike');
         this.sounds.AsteroidHit1.play();
         asteroid.destroy();
+        this.game.camera.shake(config.ASTEROID_CAM_SHAKE_AMOUNT, config.ASTEROID_CAM_SHAKE_DURATION_MS);
     }
 
     cometStrike(earth, comet) {
         console.log('[play] comet strike');
         this.sounds.AsteroidHit2.play();
         comet.destroy();
+        this.game.camera.shake(config.COMET_CAM_SHAKE_AMOUNT, config.COMET_CAM_SHAKE_DURATION_MS);
     }
 
     playMusic() {
