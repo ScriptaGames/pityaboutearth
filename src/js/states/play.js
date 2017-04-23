@@ -18,24 +18,16 @@ class PlayState extends Phaser.State {
     }
 
     update() {
-        this.i = this.i || 1;
-        if (this.i % 60 === 0) {
-            const ast = this.createAsteroid();
-            ast.position.set(this.game.world.centerX, 80);
-            ast.body.velocity.set(0, 80);
-        }
-        this.i++;
-
         this.updateAsteroids();
         this.updateCollisions();
         this.updateBarrierRotation();
     }
 
     render() {
-        this.game.debug.body(this.actors.earth);
-        this.game.debug.body(this.actors.barrier);
-        this.actors.asteroids.forEach(this.game.debug.body.bind(this.game.debug));
-        this.actors.comets.forEach(this.game.debug.body.bind(this.game.debug));
+        // this.game.debug.body(this.actors.earth);
+        // this.game.debug.body(this.actors.barrier);
+        // this.actors.asteroids.forEach(this.game.debug.body.bind(this.game.debug));
+        // this.actors.comets.forEach(this.game.debug.body.bind(this.game.debug));
     }
 
     shutdown() {
