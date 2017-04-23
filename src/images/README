@@ -1,0 +1,3 @@
+cp *.png big/
+cd big
+mogrify -scale 1000% *.png
