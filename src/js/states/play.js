@@ -9,12 +9,13 @@ class PlayState extends Phaser.State {
         this.createSounds();
 
         this.createActors();
+        this.createMissileLauncher();
 
         this.playMusic();
 
-        setInterval(() => this.createAsteroid(), 1000);
-        setInterval(() => this.createComet(), 5000);
-        setInterval(() => this.createBarrage(), 20000)
+        this.game.time.events.loop(1000, this.createAsteroid, this);
+        this.game.time.events.loop(5000, this.createComet, this);
+        this.game.time.events.loop(20000, this.createBarrage, this);
 
     }
 
@@ -29,6 +30,7 @@ class PlayState extends Phaser.State {
         // this.game.debug.body(this.actors.barrier);
         // this.actors.asteroids.forEach(this.game.debug.body.bind(this.game.debug));
         // this.actors.comets.forEach(this.game.debug.body.bind(this.game.debug));
+        // this.actors.booms.forEach(this.game.debug.body.bind(this.game.debug));
     }
 
     shutdown() {
@@ -42,8 +44,14 @@ class PlayState extends Phaser.State {
             barrier: this.createBarrier(),
             asteroids: this.game.add.group(),
             comets: this.game.add.group(),
+            missiles: this.game.add.group(),
+            booms: this.game.add.group(),
         };
 
+    }
+
+    createMissileLauncher() {
+        this.game.input.onDown.add(this.fireMissile, this);
     }
 
     createSounds() {
@@ -143,6 +151,38 @@ class PlayState extends Phaser.State {
         }
     }
 
+    createMissile() {
+        const missile = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'missile');
+
+        missile.anchor.set(0.5, 0.5);
+        missile.bringToTop();
+
+        this.game.physics.arcade.enableBody(missile);
+
+        missile.body.setCircle(missile.width / 2);
+
+        this.actors.missiles.add(missile);
+
+        return missile;
+    }
+
+    createBoom() {
+        const boom = this.game.add.sprite(0, 0, 'missile-boom');
+
+        boom.alpha = 0.2;
+        boom.anchor.set(0.5, 0.5);
+        boom.bringToTop();
+
+        this.game.physics.arcade.enableBody(boom);
+
+        boom.body.setCircle(boom.width / 2);
+        boom.body.immovable = true;
+
+        this.actors.booms.add(boom);
+
+        return boom;
+    }
+
     createBarrier() {
         const barrier = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'barrier');
         // barrier.scale.set(10, 10);
@@ -160,8 +200,10 @@ class PlayState extends Phaser.State {
     updateCollisions() {
         this.game.physics.arcade.collide(this.actors.barrier, this.actors.comets, this.deflectCelestial, this.barrierOverlap, this);
         this.game.physics.arcade.collide(this.actors.barrier, this.actors.asteroids, this.deflectCelestial, this.barrierOverlap, this);
+        this.game.physics.arcade.collide(this.actors.booms, this.actors.asteroids, this.boomHit, null, this);
+        this.game.physics.arcade.collide(this.actors.booms, this.actors.comets, this.boomHit, null, this);
         this.game.physics.arcade.collide(this.actors.earth, this.actors.asteroids, this.asteroidStrike, null, this);
-        this.game.physics.arcade.collide(this.actors.earth, this.actors.comets, this.cometStrike, null, this);
+        this.game.physics.arcade.collide(this.actors.earth, this.actors.comets, null, this.cometStrike, this);
     }
 
     updateBarrierRotation() {
@@ -235,6 +277,69 @@ class PlayState extends Phaser.State {
 
     playMusic() {
         this.sounds.PlayMusic.fadeIn(300);
+    }
+
+    fireMissile({ position }) {
+        const missile = this.createMissile();
+        const { x, y } = position;
+
+        const xCenter = x - this.actors.barrier.position.x;
+        const yCenter = y - this.actors.barrier.position.y;
+        let angle = -1 * Math.atan(xCenter/yCenter) + 2*Math.PI;
+        if (yCenter > 0) {
+            angle += Math.PI;
+        }
+        missile.rotation = angle;
+
+        const trajectory = this.game.add
+            .tween(missile.position)
+            .to( { x, y },
+                1200,
+                Phaser.Easing.Cubic.In,
+                true
+            );
+        trajectory.onComplete.add(() => this.explodeMissile(missile), this);
+    }
+
+    explodeMissile(missile) {
+        const boom = this.createBoom();
+        boom.position.copyFrom(missile.position);
+
+        const boomBodyTween = this.game.add
+            .tween(boom.body)
+            .to(
+                {
+                    radius: boom.body.radius * 3,
+                },
+                120,
+                Phaser.Easing.Cubic.InOut,
+                true,
+                0,
+                0,
+                true
+            );
+        const boomTween = this.game.add
+            .tween(boom.scale)
+            .to(
+                {
+                    x: 3,
+                    y: 3,
+                },
+                120,
+                Phaser.Easing.Cubic.InOut,
+                true,
+                0,
+                0,
+                true
+            );
+        boomTween.onComplete.add(() => boom.destroy(), this);
+
+        missile.destroy();
+    }
+
+    boomHit(boom, celestial) {
+        console.log('boom hit!');
+        celestial.destroy();
     }
 
     getRandomOffscreenPoint() {
