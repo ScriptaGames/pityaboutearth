@@ -41,6 +41,7 @@ class PreloadState extends Phaser.State {
         this.game.load.audio('Random5'       , 'sounds/Effects/Effect_Random5.ogg');
         this.game.load.audio('Random6'       , 'sounds/Effects/Effect_Random6.ogg');
         this.game.load.audio('Siren'         , 'sounds/Effects/Effect_Siren.ogg');
+        this.game.load.audio('Barrier'       , 'sounds/Effects/Effect_Barrier.ogg');
 
         // shaders
 

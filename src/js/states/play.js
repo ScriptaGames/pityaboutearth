@@ -60,6 +60,7 @@ class PlayState extends Phaser.State {
             AsteroidHit1 : this.game.add.audio('AsteroidHit1'),
             ButtonTap    : this.game.add.audio('ButtonTap'),
             Random       : this.game.add.audio('Random'),
+            Barrier      : this.game.add.audio('Barrier'),
             Siren        : this.game.add.audio('Siren'),
             PlayMusic    : this.game.add.audio('PlayMusic'),
         };
@@ -246,7 +247,11 @@ class PlayState extends Phaser.State {
         const bounceDir = Phaser.Point.subtract(cel.position, this.actors.earth.position);
         bounceDir.multiply(0.5, 0.5);
         cel.body.velocity.copyFrom(bounceDir);
+        this.sounds.Barrier.play();
+        this.destroyCelestial(cel);
+    }
 
+    destroyCelestial(cel) {
         const destroyTween = this.game.add
             .tween(cel)
             .to(
