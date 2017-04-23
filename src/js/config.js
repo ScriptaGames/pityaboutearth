@@ -11,10 +11,12 @@ const config = Object.freeze({
     COMET_PRESS_DELAY: 0.4 * Phaser.Timer.SECOND,
 
     // impact effects
-    ASTEROID_CAM_SHAKE_AMOUNT: 0.002,
+    ASTEROID_CAM_SHAKE_AMOUNT: 0.004,
     ASTEROID_CAM_SHAKE_DURATION_MS: 0.1 * Phaser.Timer.SECOND,
-    COMET_CAM_SHAKE_AMOUNT: 0.008,
+    COMET_CAM_SHAKE_AMOUNT: 0.010,
     COMET_CAM_SHAKE_DURATION_MS: 0.5 * Phaser.Timer.SECOND,
+    ASTEROID_BURST_FADE_DURATION: 0.8 * Phaser.Timer.SECOND,
+    COMET_BURST_FADE_DURATION: 1.8 * Phaser.Timer.SECOND,
 
     // after celestial is deflectd, how long does it blink before it disappears
     DEFLECT_BLINK_DURATION: 0.04 * Phaser.Timer.SECOND,

@@ -51,7 +51,7 @@ class PlayState extends Phaser.State {
     }
 
     createMissileLauncher() {
-        this.game.input.onDown.add(this.fireMissile, this);
+        this.game.input.onDown.add(_.throttle(this.fireMissile, 1000), this);
     }
 
     createSounds() {
@@ -201,10 +201,10 @@ class PlayState extends Phaser.State {
     updateCollisions() {
         this.game.physics.arcade.collide(this.actors.barrier, this.actors.comets, this.deflectCelestial, this.barrierOverlap, this);
         this.game.physics.arcade.collide(this.actors.barrier, this.actors.asteroids, this.deflectCelestial, this.barrierOverlap, this);
-        this.game.physics.arcade.collide(this.actors.booms, this.actors.asteroids, this.boomHit, null, this);
-        this.game.physics.arcade.collide(this.actors.booms, this.actors.comets, this.boomHit, null, this);
+        this.game.physics.arcade.collide(this.actors.booms, this.actors.asteroids, null, this.boomHit, this);
+        this.game.physics.arcade.collide(this.actors.booms, this.actors.comets, null, this.boomHit, this);
         this.game.physics.arcade.collide(this.actors.earth, this.actors.asteroids, this.asteroidStrike, null, this);
-        this.game.physics.arcade.collide(this.actors.earth, this.actors.comets, null, this.cometStrike, this);
+        this.game.physics.arcade.collide(this.actors.earth, this.actors.comets, this.cometStrike, null, this);
     }
 
     updateBarrierRotation() {
@@ -232,6 +232,36 @@ class PlayState extends Phaser.State {
         console.log('[play] asteroid strike');
         this.sounds.AsteroidHit1.play();
         asteroid.destroy();
+
+        const burstEmitter = game.add.emitter(0, 0, 64);
+        burstEmitter.makeParticles('asteroid-boom-sheet',
+            new Array(64).fill(0).map((v,i) => i),
+            64, false, false);
+        burstEmitter.gravity = 0;
+        burstEmitter.minParticleSpeed.setTo(-200, -200);
+        burstEmitter.maxParticleSpeed.setTo(200, 200);
+        burstEmitter.particleDrag.set(100, 100);
+        burstEmitter.area.width = asteroid.width;
+        burstEmitter.area.height = asteroid.height;
+
+        burstEmitter.x = asteroid.position.x;
+        burstEmitter.y = asteroid.position.y;
+
+        burstEmitter.alpha = 0.8;
+        burstEmitter.start(true, 1000, null, 64);
+
+        const destroyTween = this.game.add
+            .tween(burstEmitter)
+            .to(
+                {
+                    alpha: 0.0,
+                },
+                config.ASTEROID_BURST_FADE_DURATION,
+                Phaser.Easing.Linear.None,
+                true
+            );
+        destroyTween.onComplete.add(() => burstEmitter.destroy(), this);
+
         this.game.camera.shake(config.ASTEROID_CAM_SHAKE_AMOUNT, config.ASTEROID_CAM_SHAKE_DURATION_MS);
     }
 
@@ -239,6 +269,36 @@ class PlayState extends Phaser.State {
         console.log('[play] comet strike');
         this.sounds.AsteroidHit2.play();
         comet.destroy();
+
+        const burstEmitter = game.add.emitter(0, 0, 256);
+        burstEmitter.makeParticles('comet-boom-sheet',
+            new Array(256).fill(0).map((v,i) => i),
+            256, false, false);
+        burstEmitter.gravity = 0;
+        burstEmitter.minParticleSpeed.setTo(-200, -200);
+        burstEmitter.maxParticleSpeed.setTo(200, 200);
+        burstEmitter.particleDrag.set(100, 100);
+        burstEmitter.area.width = comet.width;
+        burstEmitter.area.height = comet.height;
+
+        burstEmitter.x = comet.position.x;
+        burstEmitter.y = comet.position.y;
+
+        burstEmitter.alpha = 0.8;
+        burstEmitter.start(true, 1000, null, 256);
+
+        const destroyTween = this.game.add
+            .tween(burstEmitter)
+            .to(
+                {
+                    alpha: 0.0,
+                },
+                config.COMET_BURST_FADE_DURATION,
+                Phaser.Easing.Linear.None,
+                true
+            );
+        destroyTween.onComplete.add(() => burstEmitter.destroy(), this);
+
         this.game.camera.shake(config.COMET_CAM_SHAKE_AMOUNT, config.COMET_CAM_SHAKE_DURATION_MS);
     }
 
@@ -343,8 +403,8 @@ class PlayState extends Phaser.State {
     }
 
     boomHit(boom, celestial) {
-        console.log('boom hit!');
-        celestial.destroy();
+        this.destroyCelestial(celestial);
+        return false;
     }
 
     getRandomOffscreenPoint() {

@@ -3,10 +3,6 @@ class MenuState extends Phaser.State {
     create() {
         console.log('[menu] showing main menu');
 
-        if (config.SKIP_MENU) {
-            this.next();
-        }
-
         this.music = this.game.add.audio('MenuMusic');
         this.music.play();
 
@@ -25,6 +21,11 @@ class MenuState extends Phaser.State {
             this
         );
         btnHum.anchor.set(0.5, 1);
+
+        if (config.SKIP_MENU) {
+            this.next();
+        }
+
     }
 
     next() {
