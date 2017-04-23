@@ -18,7 +18,7 @@ class PlayState extends Phaser.State {
     }
 
     update() {
-        this.updateAsteroids();
+        this.updateCelestials();
         this.updateCollisions();
         this.updateBarrierRotation();
     }
@@ -146,8 +146,11 @@ class PlayState extends Phaser.State {
         this.actors.barrier.rotation = angle;
     }
 
-    updateAsteroids() {
+    updateCelestials() {
         this.actors.asteroids.forEach(ast => {
+            this.game.physics.arcade.accelerateToObject(ast, this.actors.earth);
+        });
+        this.actors.comets.forEach(ast => {
             this.game.physics.arcade.accelerateToObject(ast, this.actors.earth);
         });
     }
