@@ -12,12 +12,21 @@ class PlayState extends Phaser.State {
 
         this.playMusic();
 
-        setInterval(() => this.createAsteroid(), 1000);
-        setInterval(() => this.createComet(), 5000);
+        // setInterval(() => this.createAsteroid(), 1000);
+        // setInterval(() => this.createComet(), 5000);
 
     }
 
     update() {
+        this.i = this.i || 1;
+        if (this.i % 60 === 0) {
+            const ast = this.createAsteroid();
+            // ast.position.set(this.game.world.centerX, this.game.world.height - 80);
+            ast.position.set(0, this.game.world.height - 80);
+            ast.body.velocity.set(80, -80);
+        }
+        this.i++;
+
         this.updateAsteroids();
         this.updateCollisions();
         this.updateBarrierRotation();
@@ -174,11 +183,9 @@ class PlayState extends Phaser.State {
         const astPoint = asteroid.position.clone().subtract(this.game.world.centerX, this.game.world.centerY).normalize();
         const barPoint = this.game.input.mousePointer.position.clone().subtract(this.game.world.centerX, this.game.world.centerY).normalize();
 
-        const angle = Math.atan((barPoint.y - astPoint.y) / (barPoint.x - astPoint.x)) * 180 / Math.PI;
+        const distance = barPoint.distance(astPoint);
 
-        console.log(`[play] ${angle} rad -> ${astPoint} vs ${barPoint}`);
-
-        return Math.abs(angle) < config.BARRIER_WIDTH;
+        return distance < config.BARRIER_WIDTH;
     }
 
     cometStrike(earth, comet) {

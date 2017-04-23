@@ -17,6 +17,6 @@ const config = Object.freeze({
     COMET_CAM_SHAKE_DURATION_MS: 0.5 * Phaser.Timer.SECOND,
 
     // how wide is the barrier (in degrees)
-    BARRIER_WIDTH: 19,
+    BARRIER_WIDTH: 0.6,
 
 });
