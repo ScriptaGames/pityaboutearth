@@ -170,8 +170,6 @@ class PlayState extends Phaser.State {
     }
 
     asteroidBarrierOverlap(barrier, asteroid) {
-        console.log('[play] asteroid barrier overlap');
-
         // find the angle between the barrier's center and the point where the
         // asteroid is touching
 
