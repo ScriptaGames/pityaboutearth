@@ -675,11 +675,11 @@ class PlayState extends Phaser.State {
 
     damageEarth(dmg) {
         this.stats.earthHP = Math.max(this.stats.earthHP - dmg, 0);
-        let damagePct = this.stats.earthHP / config.EARTH_HP;
+        let healthPct = this.stats.earthHP / config.EARTH_HP;
 
-        console.log('[play] earth damage: ', dmg, this.stats.earthHP, damagePct, this.healthFilling.width);
+        console.log('[play] earth damage: ', dmg, this.stats.earthHP, healthPct, this.healthFilling.width);
 
-        this.healthFilling.width = 380 * damagePct; // Reduce the health bar
+        this.healthFilling.width = 380 * healthPct; // Reduce the health bar
 
 
         const spriteIndex = Math.floor((config.EARTH_HP - this.stats.earthHP) / (config.EARTH_HP / (this.actors.earth.animations.getAnimation('burn').frameTotal - 1)));
@@ -707,10 +707,14 @@ class PlayState extends Phaser.State {
             this.setEarthDamageSprite(spriteIndex);
         }
 
-        if (spriteIndex === 9 && !this.actors.earth.data.exploding) {
-            this.actors.earth.data.exploding = true;
+        if (healthPct <= 0.25 && !this.actors.earth.data.sirenPlaying) {
+            this.actors.earth.data.sirenPlaying = true;
             this.sounds.Siren.play();
-            this.game.time.events.add(14000, this.blowUpEarth, this);
+        }
+
+        if (this.stats.earthHP === 0 && !this.actors.earth.data.exploding) {
+            this.actors.earth.data.exploding = true;
+            this.game.time.events.add(1000, this.blowUpEarth, this);
         }
     }
 
