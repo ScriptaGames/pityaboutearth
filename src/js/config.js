@@ -42,7 +42,7 @@ const config = Object.freeze({
     TRANSPORT_ACCELERATION: 10,
 
     // how often can you launch missiles
-    MISSILE_INTERVAL: 300,
+    MISSILE_INTERVAL: 200,
 
     // HP/damage config values
     EARTH_HP: 400,
