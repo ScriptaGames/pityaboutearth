@@ -54,6 +54,7 @@ class PlayState extends Phaser.State {
     createActors() {
         this.actors = {
             earth: this.createEarth(),
+            healthbar: this.createEarthHealthBar(),
             barrier: this.createBarrier(),
             asteroids: this.game.add.group(),
             comets: this.game.add.group(),
@@ -129,6 +130,14 @@ class PlayState extends Phaser.State {
         earth.anchor.set(0.5, 0.5);
 
         return earth;
+    }
+
+    createEarthHealthBar() {
+        console.log('[play] creating earth healthbar');
+        let earth = this.game.add.sprite(20, 20, 'earth-small', 0);
+        earth.scale.setTo(1.15, 1.15);
+        let healthbar = this.game.add.sprite(70, 20, 'healthbar', 0);
+        this.healthFilling = this.game.add.sprite(80, 30, 'health-filling', 0);
     }
 
     createAsteroid() {
@@ -666,6 +675,13 @@ class PlayState extends Phaser.State {
 
     damageEarth(dmg) {
         this.stats.earthHP = Math.max(this.stats.earthHP - dmg, 0);
+        let damagePct = this.stats.earthHP / config.EARTH_HP;
+
+        console.log('[play] earth damage: ', dmg, this.stats.earthHP, damagePct, this.healthFilling.width);
+
+        this.healthFilling.width = 380 * damagePct; // Reduce the health bar
+
+
         const spriteIndex = Math.floor((config.EARTH_HP - this.stats.earthHP) / (config.EARTH_HP / (this.actors.earth.animations.getAnimation('burn').frameTotal - 1)));
         console.log(`[play] earth sprite ${spriteIndex}`);
 
