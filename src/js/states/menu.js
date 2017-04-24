@@ -34,7 +34,10 @@ class MenuState extends Phaser.State {
             game.world.height - 80,
             'btn-play',
             this.next,
-            this
+            this,
+            1, // over
+            0, // out
+            2  // down
         );
         btnHum.anchor.set(0.5, 1);
 
