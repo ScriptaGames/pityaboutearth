@@ -776,6 +776,7 @@ class PlayState extends Phaser.State {
             );
         destroyTween.onComplete.add(() => burstEmitter.destroy(), this);
 
+        this.actors.earth.body.setCircle(0);
 
         const quant2 = 16*16;
         // second boom
