@@ -25,10 +25,52 @@ class PlayState extends Phaser.State {
             this.createColumnBarrage,
         ];
 
+        // here's the big one text!
+        this.game.time.events.add(800, () => {
+            const bigOne = this.game.add.sprite(this.game.world.centerX, this.game.world.height - 400, 'big-one');
+            bigOne.alpha = 0;
+            bigOne.anchor.set(0.5, 1);
+            this.game.add
+                .tween(bigOne)
+                .to( { alpha: 1.0, },
+                    1200,
+                    Phaser.Easing.Quadratic.In,
+                    true,
+                    0,
+                    0,
+                    true
+                );
+        });
         // Create single asteroid to start the game
-        this.createAsteroid();
+        this.game.time.events.add(1400, () => {
+            this.createAsteroid();
+        });
+        this.game.time.events.add(8600, () => {
+            const dots = this.game.add.sprite(this.game.world.centerX, this.game.world.height - 400, 'dots');
+            dots.anchor.set(0.5, 1);
+            dots.alpha = 0;
+            this.game.add
+                .tween(dots)
+                .to( { alpha: 1.0, },
+                    1200,
+                    Phaser.Easing.Quadratic.In,
+                    true, 0, 0, true
+                );
+        });
+        this.game.time.events.add(11600, () => {
+            const uhoh = this.game.add.sprite(this.game.world.centerX, this.game.world.height - 400, 'uh-oh');
+            uhoh.alpha = 0;
+            uhoh.anchor.set(0.5, 1);
+            this.game.add
+                .tween(uhoh)
+                .to( { alpha: 1.0, },
+                    1200,
+                    Phaser.Easing.Quadratic.In,
+                    true, 0, 0, true
+                );
+        });
 
-        this.game.time.events.add(7000, () => {
+        this.game.time.events.add(10300, () => {
             this.game.time.events.loop(3000, this.createAsteroid, this);
             this.game.time.events.loop(6000, this.createComet, this);
             this.game.time.events.loop(5000, this.launchTransport, this);
