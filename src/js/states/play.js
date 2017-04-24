@@ -302,7 +302,7 @@ class PlayState extends Phaser.State {
     createBoom() {
         const boom = this.game.add.sprite(0, 0, 'missile-boom');
 
-        boom.alpha = 0.2;
+        boom.alpha = 0;
         boom.anchor.set(0.5, 0.5);
         boom.bringToTop();
 
@@ -593,14 +593,31 @@ class PlayState extends Phaser.State {
     explodeMissile(missile) {
         const boom = this.createBoom();
         boom.position.copyFrom(missile.position);
+        boom.scale.set(0, 0);
 
+        const tweenDur = 120;
+
+        const boomAlphaTween = this.game.add
+            .tween(boom)
+            .to(
+                {
+                    alpha: 0.5,
+                    tint: 0xFF1010,
+                },
+                tweenDur,
+                Phaser.Easing.Cubic.InOut,
+                true,
+                0,
+                0,
+                true
+            );
         const boomBodyTween = this.game.add
             .tween(boom.body)
             .to(
                 {
-                    radius: boom.body.radius * 5,
+                    radius: boom.body.radius * 2.1,
                 },
-                120,
+                tweenDur,
                 Phaser.Easing.Cubic.InOut,
                 true,
                 0,
@@ -611,10 +628,10 @@ class PlayState extends Phaser.State {
             .tween(boom.scale)
             .to(
                 {
-                    x: 5,
-                    y: 5,
+                    x: 2.5,
+                    y: 2.5,
                 },
-                120,
+                tweenDur,
                 Phaser.Easing.Cubic.InOut,
                 true,
                 0,
