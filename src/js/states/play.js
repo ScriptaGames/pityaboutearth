@@ -483,7 +483,7 @@ class PlayState extends Phaser.State {
         const enlarge = this.game.add
             .tween(transport.scale)
             .to( { x: 1, y: 1 },
-                400,
+                1000,
                 Phaser.Easing.Linear.None,
                 true
             );
