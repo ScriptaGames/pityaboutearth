@@ -186,7 +186,10 @@ class PlayState extends Phaser.State {
     }
 
     createMissile() {
-        const missile = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'missile');
+        const missile = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'missile-sheet');
+
+        missile.animations.add('afterburner');
+        missile.animations.play('afterburner', 20, true);
 
         missile.anchor.set(0.5, 0.5);
         missile.bringToTop();
@@ -387,7 +390,15 @@ class PlayState extends Phaser.State {
         let index = this.game.rnd.between(0, this.transportSpawnPoints.length - 1);
         let point = this.transportSpawnPoints[index];
         let transport = this.game.add.sprite(point.x, point.y, 'transport-sheet');
+        transport.scale.set(0, 0);
 
+        const enlarge = this.game.add
+            .tween(transport.scale)
+            .to( { x: 1, y: 1 },
+                400,
+                Phaser.Easing.Linear.None,
+                true
+            );
         this.stats.transportsLaunched += 1;
 
         transport.anchor.set(0.5, 0.5);
@@ -421,6 +432,7 @@ class PlayState extends Phaser.State {
 
     fireMissile({ position }) {
         const missile = this.createMissile();
+        missile.scale.set(0, 0);
         const { x, y } = position;
 
         this.stats.missilesFired += 1;
@@ -435,10 +447,17 @@ class PlayState extends Phaser.State {
         }
         missile.rotation = angle;
 
+        const enlarge = this.game.add
+            .tween(missile.scale)
+            .to( { x: 1, y: 1 },
+                1000,
+                Phaser.Easing.Linear.None,
+                true
+            );
         const trajectory = this.game.add
             .tween(missile.position)
             .to( { x, y },
-                1200,
+                1000,
                 Phaser.Easing.Cubic.In,
                 true
             );
