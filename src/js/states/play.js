@@ -186,7 +186,9 @@ class PlayState extends Phaser.State {
     }
 
     createMissile() {
-        const missile = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'missile-sheet');
+        const x = this.game.world.centerX + Math.random() * this.actors.earth.width/2 - this.actors.earth.width / 4;
+        const y = this.game.world.centerY + Math.random() * this.actors.earth.height/2 - this.actors.earth.height / 4;
+        const missile = this.game.add.sprite(x, y, 'missile-sheet');
 
         missile.animations.add('afterburner');
         missile.animations.play('afterburner', 20, true);
@@ -439,8 +441,8 @@ class PlayState extends Phaser.State {
 
         this.sounds.EscapeLaunch.play();
 
-        const xCenter = x - this.actors.barrier.position.x;
-        const yCenter = y - this.actors.barrier.position.y;
+        const xCenter = x - missile.position.x;
+        const yCenter = y - missile.position.y;
         let angle = -1 * Math.atan(xCenter/yCenter) + 2*Math.PI;
         if (yCenter > 0) {
             angle += Math.PI;
