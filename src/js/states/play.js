@@ -107,6 +107,7 @@ class PlayState extends Phaser.State {
             ButtonTap        : this.game.add.audio('ButtonTap'),
             DropExplosion    : this.game.add.audio('DropExplosion'),
             MissileExplosion : this.game.add.audio('MissileExplosion'),
+            MissileLaunch    : this.game.add.audio('MissileLaunch'),
             EscapeLaunch2    : this.game.add.audio('EscapeLaunch2'),
             EscapeLaunch     : this.game.add.audio('EscapeLaunch'),
             Random           : this.game.add.audio('Random'),
@@ -121,6 +122,8 @@ class PlayState extends Phaser.State {
 
             PlayMusic    : this.game.add.audio('PlayMusic', 0.1, true),
         };
+
+        this.sounds.MissileLaunch.allowMultiple = true;
     }
 
     createBackground() {
@@ -522,7 +525,7 @@ class PlayState extends Phaser.State {
 
         this.stats.missilesFired += 1;
 
-        this.sounds.Rocket1.play();
+        this.sounds.MissileLaunch.play();
 
         const xCenter = x - missile.position.x;
         const yCenter = y - missile.position.y;
@@ -603,7 +606,7 @@ class PlayState extends Phaser.State {
 
         if (spriteIndex === 9 && !this.actors.earth.data.exploding) {
             this.actors.earth.data.exploding = true;
-            this.sounds.Siren.play();
+            // this.sounds.Siren.play();
             this.game.time.events.add(14000, this.blowUpEarth, this);
         }
     }
