@@ -13,6 +13,7 @@ class ScoreState extends Phaser.State {
 
         const bg = this.game.add.sprite(0, 0, 'background');
         bg.tint = 0x3f3f3f;
+        bg.alpha = 0.6;
 
         const logo = this.game.add.sprite(this.game.world.centerX, 120, 'logo');
         logo.anchor.set(0.5, 0);

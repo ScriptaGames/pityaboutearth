@@ -834,6 +834,8 @@ class PlayState extends Phaser.State {
             );
         burst2Tween.onComplete.add(() => secondBurstEmitter.destroy(), this);
 
+        this.game.time.events.add(5000, this.next, this);
+
         console.log('[play] KABOOOOOOM!');
     }
 
