@@ -103,7 +103,9 @@ class PlayState extends Phaser.State {
             Rocket1          : this.game.add.audio('Rocket1'),
             Rocket2          : this.game.add.audio('Rocket2'),
 
-            PlayMusic    : this.game.add.audio('PlayMusic', 0.1, true),
+            PlayMusic    : this.game.add.audio('PlayMusic'),
+            VictoryMusic : this.game.add.audio('VictoryMusic'),
+            DefeatMusic  : this.game.add.audio('DefeatMusic'),
         };
 
         this.sounds.MissileLaunch.allowMultiple = true;
@@ -696,10 +698,113 @@ class PlayState extends Phaser.State {
     }
 
     blowUpEarth() {
-        this.actors.earth.destroy();
         this.actors.barrier.destroy();
-        this.sounds.Random5.play();
-        this.sounds.Random2.play();
+        this.sounds.PlayMusic.fadeOut(300);
+        this.sounds.DefeatMusic.fadeIn(300);
+        this.sounds.CometHit.play();
+
+        const hitTween = this.game.add
+            .tween(this.actors.earth)
+            .to(
+                {
+                    tint: 0xFF7007,
+                    alpha: 0,
+                },
+                60,
+                Phaser.Easing.Linear.None,
+                true,
+                0,
+                80,
+                true
+            );
+        const fadeTween = this.game.add
+            .tween(this.actors.earth)
+            .to(
+                {
+                    alpha: 0,
+                },
+                3600,
+                Phaser.Easing.Linear.None,
+                true
+            );
+        const scaleTween = this.game.add
+            .tween(this.actors.earth.scale)
+            .to(
+                { x: 2, y: 2 },
+                3600,
+                Phaser.Easing.Linear.None,
+                true,
+            );
+        scaleTween.onComplete.add(() => this.actors.earth.destroy(), this);
+
+        const quant = 64*32;
+
+        const burstEmitter = game.add.emitter(0, 0, quant);
+        burstEmitter.makeParticles('earth-boom-sheet',
+            new Array(quant).fill(0).map((v,i) => i),
+            quant, false, false);
+        burstEmitter.gravity = 0;
+        burstEmitter.minParticleSpeed.setTo(-140, -140);
+        burstEmitter.maxParticleSpeed.setTo(140, 140);
+        burstEmitter.maxParticleScale = 1.3;
+        burstEmitter.minParticleScale = 1.3;
+        burstEmitter.particleDrag.set(10, 10);
+        burstEmitter.area.width = this.actors.earth.width;
+        burstEmitter.area.height = this.actors.earth.height;
+
+        burstEmitter.x = this.actors.earth.position.x;
+        burstEmitter.y = this.actors.earth.position.y;
+
+        burstEmitter.alpha = 0.8;
+        burstEmitter.start(true, 3600, null, quant);
+
+        const destroyTween = this.game.add
+            .tween(burstEmitter)
+            .to(
+                {
+                    alpha: 0.0,
+                },
+                3600,
+                Phaser.Easing.Linear.None,
+                true
+            );
+        destroyTween.onComplete.add(() => burstEmitter.destroy(), this);
+
+
+        const quant2 = 16*16;
+        // second boom
+        const secondBurstEmitter = game.add.emitter(0, 0, quant2);
+        secondBurstEmitter.makeParticles('earth-boom2-sheet',
+            new Array(quant2).fill(0).map((v,i) => i),
+            quant2, false, false);
+        secondBurstEmitter.gravity = 0;
+        secondBurstEmitter.minParticleSpeed.setTo(-340, -340);
+        secondBurstEmitter.maxParticleSpeed.setTo(340, 340);
+        secondBurstEmitter.maxParticleScale = 2;
+        secondBurstEmitter.minParticleScale = 2;
+        secondBurstEmitter.particleDrag.set(10, 10);
+        secondBurstEmitter.area.width = this.actors.earth.width / 2;
+        secondBurstEmitter.area.height = this.actors.earth.height / 2;
+
+        secondBurstEmitter.x = this.actors.earth.position.x;
+        secondBurstEmitter.y = this.actors.earth.position.y;
+
+        secondBurstEmitter.alpha = 0.8;
+        secondBurstEmitter.start(true, 3600, null, quant2);
+
+        const burst2Tween = this.game.add
+            .tween(secondBurstEmitter)
+            .to(
+                {
+                    alpha: 0.0,
+                },
+                2600,
+                Phaser.Easing.Linear.None,
+                true,
+                1200
+            );
+        burst2Tween.onComplete.add(() => secondBurstEmitter.destroy(), this);
+
         console.log('[play] KABOOOOOOM!');
     }
 
@@ -744,17 +849,19 @@ class PlayState extends Phaser.State {
     }
 
     generateTransportSpawnPoints(count=36) {
-        this.transportSpawnPoints = [];
+        if (this.isAlive()) {
+            this.transportSpawnPoints = [];
 
-        let x, y;
-        let angle = 360 / count;
+            let x, y;
+            let angle = 360 / count;
 
-        // spawn asteroids in a circle
-        for (let i = 0.1; i < 360; i += angle) {
-            x = this.game.world.centerX + 100 * Math.cos(i);
-            y = this.game.world.centerY + 100 * Math.sin(i);
+            // spawn asteroids in a circle
+            for (let i = 0.1; i < 360; i += angle) {
+                x = this.game.world.centerX + 100 * Math.cos(i);
+                y = this.game.world.centerY + 100 * Math.sin(i);
 
-            this.transportSpawnPoints.push({x, y});
+                this.transportSpawnPoints.push({x, y});
+            }
         }
     }
 }
