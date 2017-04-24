@@ -36,7 +36,7 @@ const config = Object.freeze({
     BARRANGE_WARNING_TIME: 2.8 * Phaser.Timer.SECOND,
 
     // initial transport speed
-    TRANSPORT_SPEED: 100,
+    TRANSPORT_SPEED: 14,
 
     // how fast the transports accelerate away from earth
     TRANSPORT_ACCELERATION: 10,
