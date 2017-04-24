@@ -54,7 +54,7 @@ class PlayState extends Phaser.State {
     }
 
     createMissileLauncher() {
-        this.game.input.onDown.add(_.throttle(this.fireMissile, 1000), this);
+        this.game.input.onDown.add(_.throttle(this.fireMissile, config.MISSILE_INTERVAL), this);
     }
 
     createSounds() {
@@ -427,7 +427,7 @@ class PlayState extends Phaser.State {
             .tween(boom.body)
             .to(
                 {
-                    radius: boom.body.radius * 3,
+                    radius: boom.body.radius * 5,
                 },
                 120,
                 Phaser.Easing.Cubic.InOut,
@@ -440,8 +440,8 @@ class PlayState extends Phaser.State {
             .tween(boom.scale)
             .to(
                 {
-                    x: 3,
-                    y: 3,
+                    x: 5,
+                    y: 5,
                 },
                 120,
                 Phaser.Easing.Cubic.InOut,

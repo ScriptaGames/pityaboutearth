@@ -39,4 +39,7 @@ const config = Object.freeze({
     // how fast the transports accelerate away from earth
     TRANSPORT_ACCELERATION: 10,
 
+    // how often can you launch missiles
+    MISSILE_INTERVAL: 300,
+
 });
