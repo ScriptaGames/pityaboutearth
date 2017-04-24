@@ -249,7 +249,7 @@ class PlayState extends Phaser.State {
 
     asteroidStrike(earth, asteroid) {
         console.log('[play] asteroid strike');
-        this.sounds.AsteroidHit1.play();
+        this.sounds.AsteroidHit2.play();
         asteroid.destroy();
 
         const burstEmitter = game.add.emitter(0, 0, 64);
@@ -326,8 +326,13 @@ class PlayState extends Phaser.State {
         const bounceDir = Phaser.Point.subtract(cel.position, this.actors.earth.position);
         bounceDir.multiply(0.5, 0.5);
         cel.body.velocity.copyFrom(bounceDir);
-        this.sounds.Barrier.play();
-        this.destroyCelestial(cel);
+
+        if (!cel.data.deflected) {
+            cel.data.deflected = true;  // only play sound once
+            // this.sounds.Barrier.play();
+            this.sounds.AsteroidHit1.play();
+            this.destroyCelestial(cel);
+        }
     }
 
     destroyCelestial(cel) {
