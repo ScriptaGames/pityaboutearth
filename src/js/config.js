@@ -3,6 +3,8 @@ const config = Object.freeze({
     // skip menu for quick testing
     SKIP_MENU: false,
 
+    DIFFICULTY: 0.2, // base difficulty pretty easy
+
     // canvas resolution
     CANVAS_WIDTH: 1180,
     CANVAS_HEIGHT: 1920,

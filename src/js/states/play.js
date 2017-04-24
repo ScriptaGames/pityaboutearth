@@ -4,6 +4,7 @@ class PlayState extends Phaser.State {
 
         // for easy access to this state for debugging in browser console
         window.play = this;
+        this.between = this.game.rnd.between.bind(this.game.rnd);
 
         this.createBackground();
         this.createSounds();
@@ -15,17 +16,36 @@ class PlayState extends Phaser.State {
 
         this.playMusic();
 
+        this.difficulty = config.DIFFICULTY;
+
         this.barrageFunctions = [
-            this.createSpiralBarrage.bind(this),
-            this.createZigZagBarrage.bind(this),
+            this.createSpiralBarrage,
+            this.createZigZagBarrage,
         ];
 
         this.game.time.events.loop(3000, this.createAsteroid, this);
         this.game.time.events.loop(6000, this.createComet, this);
         this.game.time.events.loop(5000, this.launchTransport, this);
 
-        this.game.time.events.loop(10000, () => {
-            this.barrageFunctions[this.game.rnd.between(0, this.barrageFunctions.length-1)]();
+
+        this.game.time.events.loop(15000, () => {
+            let barrageFunc = this.barrageFunctions[this.between(0, this.barrageFunctions.length-1)];
+
+            let count = this.between(10, 30);
+            let width = this.between(120, 359);
+            let offset = this.between(0, 360);
+            let reverse = this.between(0, 1);
+
+            if (barrageFunc.name == 'createZigZagBarrage') {
+                count = this.between(3, 10);
+                width = this.between(40, 120);
+            }
+
+            barrageFunc.bind(this)(count, 1000, width, offset, reverse, this.difficulty);
+
+            // Increase the difficulty
+            this.difficulty += 0.1;
+
         }, this);
     }
 
@@ -160,17 +180,17 @@ class PlayState extends Phaser.State {
         return celestial;
     }
 
-    createZigZagBarrage(zagCount=3, count=6, radius=1000, width=90, reverse=false, difficulty=0.5, createCelestialCallback=this.createAsteroid.bind(this)) {
+    createZigZagBarrage(count=6, radius=1000, width=90, offset=0, reverse=false, difficulty=0.5, createCelestialCallback=this.createAsteroid.bind(this), zagCount=3) {
         if (zagCount == 0) return;
         let delayOffset = 0;
 
         for (let i = 0; i < zagCount; i++) {
-            delayOffset = this.createSpiralBarrage(count, radius, width, reverse, difficulty, createCelestialCallback, delayOffset);
+            delayOffset = this.createSpiralBarrage(count, radius, width, offset, reverse, difficulty, createCelestialCallback, delayOffset);
             reverse = !reverse;
         }
     }
 
-    createSpiralBarrage(count=30, radius=1000, width=360, reverse=false, difficulty=0.5, createCelestialCallback=this.createAsteroid.bind(this), delayOffset=0) {
+    createSpiralBarrage(count=30, radius=1000, width=360, offset=0, reverse=false, difficulty=0.5, createCelestialCallback=this.createAsteroid.bind(this), delayOffset=0) {
         if (difficulty == 0) difficulty = 0.01;  // avoid divide by 0
         if (count == 0) return;
         if (width > 360) width = 360;
@@ -181,13 +201,13 @@ class PlayState extends Phaser.State {
 
         // spawn asteroids in a spiral pattern
         if (!reverse) {
-            for (let i = 0; i < width; i += angle) {
+            for (let i = 0 + offset; i < width + offset; i += angle) {
                 delay += config.BARRAGE_HARD_DELAY / difficulty;
                 this.createBarageCelestial(i, radius, delay, difficulty, createCelestialCallback);
             }
         }
         else {
-            for (let i = width; i > 0; i -= angle) {
+            for (let i = width + offset; i > 0 + offset; i -= angle) {
                 delay += config.BARRAGE_HARD_DELAY / difficulty;
                 this.createBarageCelestial(i, radius, delay, difficulty, createCelestialCallback);
             }
@@ -612,8 +632,6 @@ class PlayState extends Phaser.State {
         let x, y;
         let angle = 360 / count;
 
-        // console.log()
-
         // spawn asteroids in a circle
         for (let i = 0.1; i < 360; i += angle) {
             x = this.game.world.centerX + 100 * Math.cos(i);
@@ -621,7 +639,5 @@ class PlayState extends Phaser.State {
 
             this.transportSpawnPoints.push({x, y});
         }
-
-        console.log(this.transportSpawnPoints);
     }
 }
