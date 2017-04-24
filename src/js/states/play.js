@@ -25,11 +25,17 @@ class PlayState extends Phaser.State {
             this.createColumnBarrage,
         ];
 
-        this.game.time.events.loop(3000, this.createAsteroid, this);
-        this.game.time.events.loop(6000, this.createComet, this);
-        this.game.time.events.loop(5000, this.launchTransport, this);
-        this.game.time.events.loop(1000, () => this.difficulty += 0.02, this); // Increase the difficulty
-        this.game.time.events.add(this.timeToNextBarrage, this.fireBarrage.bind(this), this);
+        // Create single asteroid to start the game
+        this.createAsteroid();
+
+        this.game.time.events.add(7000, () => {
+            this.game.time.events.loop(3000, this.createAsteroid, this);
+            this.game.time.events.loop(6000, this.createComet, this);
+            this.game.time.events.loop(5000, this.launchTransport, this);
+            this.game.time.events.loop(1000, () => this.difficulty += 0.02, this); // Increase the difficulty
+            this.game.time.events.add(this.timeToNextBarrage, this.fireBarrage.bind(this), this);
+        }, this);
+
     }
 
     update() {
