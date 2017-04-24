@@ -30,6 +30,9 @@ const config = Object.freeze({
     // How much variance in initial velocity for each ast in barrage
     BARRAGE_VARIANCE: 25,
 
+    // how long to start the barrage Siren sound before the barrage is spawned
+    BARRANGE_WARNING_TIME: 2.8 * Phaser.Timer.SECOND,
+
     // initial transport speed
     TRANSPORT_SPEED: 100,
 

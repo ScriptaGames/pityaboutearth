@@ -16,7 +16,7 @@ class PlayState extends Phaser.State {
 
         this.game.time.events.loop(1000, this.createAsteroid, this);
         this.game.time.events.loop(5000, this.createComet, this);
-        this.game.time.events.loop(20000, this.createBarrage, this);
+        this.game.time.events.loop(20000, this.createBarrageEvent, this);
         this.game.time.events.loop(5000, this.launchTransport, this);
 
     }
@@ -59,12 +59,22 @@ class PlayState extends Phaser.State {
 
     createSounds() {
         this.sounds = {
-            AsteroidHit2 : this.game.add.audio('AsteroidHit2'),
-            AsteroidHit1 : this.game.add.audio('AsteroidHit1'),
-            ButtonTap    : this.game.add.audio('ButtonTap'),
-            Random       : this.game.add.audio('Random'),
-            Barrier      : this.game.add.audio('Barrier'),
-            Siren        : this.game.add.audio('Siren'),
+            AsteroidHit1     : this.game.add.audio('AsteroidHit1'),
+            AsteroidHit2     : this.game.add.audio('AsteroidHit2'),
+            ButtonTap        : this.game.add.audio('ButtonTap'),
+            DropExplosion    : this.game.add.audio('DropExplosion'),
+            MissileExplosion : this.game.add.audio('MissileExplosion'),
+            EscapeLaunch2    : this.game.add.audio('EscapeLaunch2'),
+            EscapeLaunch     : this.game.add.audio('EscapeLaunch'),
+            Random           : this.game.add.audio('Random'),
+            Random2          : this.game.add.audio('Random2'),
+            Random3          : this.game.add.audio('Random3'),
+            Random4          : this.game.add.audio('Random4'),
+            Random5          : this.game.add.audio('Random5'),
+            Random6          : this.game.add.audio('Random6'),
+            Siren            : this.game.add.audio('Siren'),
+            Barrier          : this.game.add.audio('Barrier'),
+
             PlayMusic    : this.game.add.audio('PlayMusic'),
         };
     }
@@ -82,9 +92,6 @@ class PlayState extends Phaser.State {
         earth.body.immovable = true;
 
         earth.anchor.set(0.5, 0.5);
-        // DEBUG
-        earth.inputEnabled = true;
-        earth.events.onInputDown.add(() => this.sounds.Siren.play(), this);
 
         return earth;
     }
@@ -129,9 +136,18 @@ class PlayState extends Phaser.State {
         return celestial;
     }
 
+    createBarrageEvent(count=60, radius=1200) {
+        // play the siren, wait a bit, then launch the barrage
+        this.sounds.Siren.play();
+
+        this.game.time.events.add(config.BARRANGE_WARNING_TIME, () => this.createBarrage(count, radius), this);
+    }
+
     createBarrage(count=60, radius=1200) {
         let x, y;
         let angle = 360 / count;
+
+        this.sounds.Siren.play();
 
         // spawn asteroids in a circle
         for (let i = 0; i < 360; i += angle) {
@@ -436,6 +452,7 @@ class PlayState extends Phaser.State {
             );
         boomTween.onComplete.add(() => boom.destroy(), this);
 
+        this.sounds.MissileExplosion.play();
         missile.destroy();
     }
 
