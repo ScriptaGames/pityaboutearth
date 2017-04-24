@@ -30,8 +30,8 @@ class MenuState extends Phaser.State {
         ];
 
         const btnHum = game.add.button(
-            game.world.centerX - 160,
-            game.world.height - 80,
+            game.world.centerX,
+            game.world.height - 180,
             'btn-play',
             this.next,
             this,
