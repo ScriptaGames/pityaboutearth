@@ -19,8 +19,8 @@ class PlayState extends Phaser.State {
         this.difficulty = config.DIFFICULTY;
 
         this.barrageFunctions = [
-            // this.createSpiralBarrage,
-            // this.createZigZagBarrage,
+            this.createSpiralBarrage,
+            this.createZigZagBarrage,
             this.createColumnBarrage,
         ];
 
