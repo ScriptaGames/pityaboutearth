@@ -3,15 +3,27 @@ class MenuState extends Phaser.State {
     create() {
         console.log('[menu] showing main menu');
 
+        window.menu = this;
+
         this.music = this.game.add.audio('MenuMusic');
         this.music.play();
 
         const bg = this.game.add.sprite(0, 0, 'background');
         bg.tint = 0x3f3f3f;
 
-        this.scoreText = game.add.text(game.world.centerX, 4, "MAIN MENU", { fill: "#ffffff", align: "center" });
-        this.scoreText.fontSize = 124;
-        this.scoreText.anchor.set(0.5, 0);
+        // const logo = this.game.add.sprite(this.game.world.centerX, 300, 'logo');
+        // logo.anchor.set(0.5, 0);
+
+        const fontSet = `! "#$%^'()* +,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_abcdefghijklmnopqrstuvwxyz{|}~`;
+        this.font = game.add.retroFont('gelatin-font', 70, 110, fontSet, 18, 0, 0);
+        this.text = this.game.add.image(80, 80, this.font);
+        this.text.scale.set(0.5,0.5);
+        this.font.text = '';
+        this.text.tint = 0x65b219;
+
+        this.i = 0;
+
+        this.story = `Pity about Earth...`;
 
         const btnHum = game.add.button(
             game.world.centerX - 160,
@@ -28,6 +40,12 @@ class MenuState extends Phaser.State {
 
     }
 
+    update() {
+        this.i += 1;
+
+        this.font.text = this.story.slice(0, this.i);
+    }
+
     next() {
         this.game.stateTransition.to('PlayState');
     }
@@ -36,7 +54,4 @@ class MenuState extends Phaser.State {
         this.music.stop();
     }
 
-    story() {
-        return `There is nowhere else, at least in the near future, to which our species could migrate... Like it or not, for the moment the Earth is where we make our stand.`;
-    }
 }
