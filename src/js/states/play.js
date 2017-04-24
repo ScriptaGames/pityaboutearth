@@ -839,6 +839,10 @@ class PlayState extends Phaser.State {
         return this.stats.earthHP > 0;
     }
 
+    next() {
+        this.game.stateTransition.to('ScoreState', false, false, { stats: this.stats });
+    }
+
     getRandomOffscreenPoint() {
         let self = this;
         let padding = 100;
