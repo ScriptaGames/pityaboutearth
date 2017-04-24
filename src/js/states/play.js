@@ -606,7 +606,7 @@ class PlayState extends Phaser.State {
 
         if (spriteIndex === 9 && !this.actors.earth.data.exploding) {
             this.actors.earth.data.exploding = true;
-            // this.sounds.Siren.play();
+            this.sounds.Siren.play();
             this.game.time.events.add(14000, this.blowUpEarth, this);
         }
     }
