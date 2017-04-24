@@ -497,49 +497,51 @@ class PlayState extends Phaser.State {
     }
 
     launchTransport() {
-        let index = this.game.rnd.between(0, this.transportSpawnPoints.length - 1);
-        let point = this.transportSpawnPoints[index];
-        let transport = this.game.add.sprite(point.x, point.y, 'transport-sheet');
-        transport.scale.set(0, 0);
+        if (this.isAlive()) {
+            let index = this.game.rnd.between(0, this.transportSpawnPoints.length - 1);
+            let point = this.transportSpawnPoints[index];
+            let transport = this.game.add.sprite(point.x, point.y, 'transport-sheet');
+            transport.scale.set(0, 0);
 
-        this.sounds.Rocket2.play();
+            this.sounds.Rocket2.play();
 
-        const enlarge = this.game.add
-            .tween(transport.scale)
-            .to( { x: 1, y: 1 },
-                1000,
-                Phaser.Easing.Linear.None,
-                true
-            );
-        this.stats.transportsLaunched += 1;
+            const enlarge = this.game.add
+                .tween(transport.scale)
+                .to({x: 1, y: 1},
+                    1000,
+                    Phaser.Easing.Linear.None,
+                    true
+                );
+            this.stats.transportsLaunched += 1;
 
-        transport.anchor.set(0.5, 0.5);
-        transport.bringToTop();
+            transport.anchor.set(0.5, 0.5);
+            transport.bringToTop();
 
-        this.game.physics.arcade.enableBody(transport);
-        transport.body.setCircle(transport.width / 2);
+            this.game.physics.arcade.enableBody(transport);
+            transport.body.setCircle(transport.width / 2);
 
-        this.actors.transports.add(transport);
+            this.actors.transports.add(transport);
 
-        // play engine fire animation
-        transport.animations.add('afterburner');
-        transport.animations.play('afterburner', 20, true);
+            // play engine fire animation
+            transport.animations.add('afterburner');
+            transport.animations.play('afterburner', 20, true);
 
-        // set a direction away from the center
-        let direction = Phaser.Point.subtract(this.actors.earth.position, transport.position);
-        direction.normalize();
-        direction.multiply(config.TRANSPORT_SPEED, config.TRANSPORT_SPEED);
-        transport.body.velocity.set(-direction.x, -direction.y);
+            // set a direction away from the center
+            let direction = Phaser.Point.subtract(this.actors.earth.position, transport.position);
+            direction.normalize();
+            direction.multiply(config.TRANSPORT_SPEED, config.TRANSPORT_SPEED);
+            transport.body.velocity.set(-direction.x, -direction.y);
 
-        // rotate the ship so it's pointing in the right direction
-        let x = transport.position.x + transport.body.velocity.x;
-        let y = transport.position.y + transport.body.velocity.y;
-        transport.rotation = this.game.physics.arcade.angleToXY(transport, x, y);
-        transport.rotation += Math.PI / 2;
+            // rotate the ship so it's pointing in the right direction
+            let x = transport.position.x + transport.body.velocity.x;
+            let y = transport.position.y + transport.body.velocity.y;
+            transport.rotation = this.game.physics.arcade.angleToXY(transport, x, y);
+            transport.rotation += Math.PI / 2;
 
-        // Set acceleration
-        transport.body.acceleration.set(transport.body.velocity.x * config.TRANSPORT_ACCELERATION,
-            transport.body.velocity.y * config.TRANSPORT_ACCELERATION);
+            // Set acceleration
+            transport.body.acceleration.set(transport.body.velocity.x * config.TRANSPORT_ACCELERATION,
+                transport.body.velocity.y * config.TRANSPORT_ACCELERATION);
+        }
     }
 
     fireBarrage() {
