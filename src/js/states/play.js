@@ -655,6 +655,19 @@ class PlayState extends Phaser.State {
         const spriteIndex = Math.floor((config.EARTH_HP - this.stats.earthHP) / (config.EARTH_HP / (this.actors.earth.animations.getAnimation('burn').frameTotal - 1)));
         console.log(`[play] earth sprite ${spriteIndex}`);
 
+        const hitTween = this.game.add
+            .tween(this.actors.earth)
+            .to(
+                {
+                    tint: 0xFFCC07,
+                },
+                100,
+                Phaser.Easing.Cubic.InOut,
+                true,
+                0,
+                0,
+                true
+            );
         if (spriteIndex <= 9) {
             this.setEarthDamageSprite(spriteIndex);
         }
