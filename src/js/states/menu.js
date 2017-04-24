@@ -11,7 +11,7 @@ class MenuState extends Phaser.State {
         const bg = this.game.add.sprite(0, 0, 'background');
         bg.tint = 0x3f3f3f;
 
-        const logo = this.game.add.sprite(this.game.world.centerX, 166, 'logo');
+        const logo = this.game.add.sprite(this.game.world.centerX, 120, 'logo');
         logo.anchor.set(0.5, 0);
 
         this.fontSet = `! "#$%^'()* +,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_abcdefghijklmnopqrstuvwxyz{|}~`;
@@ -135,7 +135,7 @@ class MenuState extends Phaser.State {
         font.text = '';
         // text.tint = 0x51B5E0;
         text.position.x = 60;
-        text.position.y = index * this.lineHeight + 600;
+        text.position.y = index * this.lineHeight + 636;
         let i = 0;
 
         this.game.time.events.loop(this.timePerChar, () => {
