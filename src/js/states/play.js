@@ -17,6 +17,7 @@ class PlayState extends Phaser.State {
         this.playMusic();
 
         this.difficulty = config.DIFFICULTY;
+        this.timeToNextBarrage = 15000;
 
         this.barrageFunctions = [
             this.createSpiralBarrage,
@@ -27,34 +28,8 @@ class PlayState extends Phaser.State {
         this.game.time.events.loop(3000, this.createAsteroid, this);
         this.game.time.events.loop(6000, this.createComet, this);
         this.game.time.events.loop(5000, this.launchTransport, this);
-
-
-        this.game.time.events.loop(15000, () => {
-            let barrageFunc = this.barrageFunctions[this.between(0, this.barrageFunctions.length-1)];
-
-            if (barrageFunc.name == 'createColumnBarrage') {
-                let columnCount = this.between(2, 6);
-                let celestPerColumn = this.between(3, 10);
-                barrageFunc.bind(this)(columnCount, celestPerColumn, this.difficulty);
-            }
-            else {
-                let count = this.between(10, 30);
-                let width = this.between(120, 359);
-                let offset = this.between(0, 360);
-                let reverse = this.between(0, 1);
-
-                if (barrageFunc.name == 'createZigZagBarrage') {
-                    count = this.between(8, 16);
-                    width = this.between(60, 180);
-                }
-
-                barrageFunc.bind(this)(count, 1000, width, offset, reverse, this.difficulty);
-            }
-
-            // Increase the difficulty
-            this.difficulty += 0.1;
-
-        }, this);
+        this.game.time.events.loop(1000, () => this.difficulty += 0.02, this); // Increase the difficulty
+        this.game.time.events.add(this.timeToNextBarrage, this.fireBarrage.bind(this), this);
     }
 
     update() {
@@ -554,6 +529,35 @@ class PlayState extends Phaser.State {
         // Set acceleration
         transport.body.acceleration.set(transport.body.velocity.x * config.TRANSPORT_ACCELERATION,
             transport.body.velocity.y * config.TRANSPORT_ACCELERATION);
+    }
+
+    fireBarrage() {
+        // First schedule next barrage
+        this.timeToNextBarrage = Math.min(this.timeToNextBarrage / this.difficulty, config.MAX_TIME_BETWEEN_BARRAGE);
+        this.timeToNextBarrage = Math.max(this.timeToNextBarrage, config.MIN_TIME_BETWEEN_BARRAGE);
+        this.game.time.events.add(this.timeToNextBarrage, this.fireBarrage.bind(this));
+
+        // get random barrage function
+        let barrageFunc = this.barrageFunctions[this.between(0, this.barrageFunctions.length - 1)];
+
+        if (barrageFunc.name == 'createColumnBarrage') {
+            let columnCount = this.between(2, 6);
+            let celestPerColumn = this.between(3, 10);
+            barrageFunc.bind(this)(columnCount, celestPerColumn, this.difficulty);
+        }
+        else {
+            let count = this.between(10, 30);
+            let width = this.between(120, 359);
+            let offset = this.between(0, 360);
+            let reverse = this.between(0, 1);
+
+            if (barrageFunc.name == 'createZigZagBarrage') {
+                count = this.between(8, 16);
+                width = this.between(60, 180);
+            }
+
+            barrageFunc.bind(this)(count, 1000, width, offset, reverse, this.difficulty);
+        }
     }
 
     fireMissile({ position }) {

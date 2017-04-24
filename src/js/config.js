@@ -32,6 +32,10 @@ const config = Object.freeze({
     // The ms delay between asteroids on the default hard setting
     BARRAGE_HARD_DELAY: 100,
 
+    // The initial time between barrages
+    MAX_TIME_BETWEEN_BARRAGE: 15000,
+    MIN_TIME_BETWEEN_BARRAGE: 4000,
+
     // how long to start the barrage Siren sound before the barrage is spawned
     BARRANGE_WARNING_TIME: 2.8 * Phaser.Timer.SECOND,
 
