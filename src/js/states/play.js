@@ -106,7 +106,10 @@ class PlayState extends Phaser.State {
 
     createEarth() {
         console.log('[play] creating earth');
-        const earth = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'earth');
+        const earth = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'earth-sheet', 0);
+
+        earth.animations.add('burn');
+        earth.animations.getAnimation('burn').frame = 0;
 
         this.game.physics.arcade.enableBody(earth);
         earth.body.setCircle(earth.width / 2);
@@ -558,6 +561,13 @@ class PlayState extends Phaser.State {
         this.destroyCelestial(celestial, true);
         this.stats.celestialsDestroyed += 1;
         return false;
+    }
+
+    advanceEarthDamage() {
+        const animation = this.actors.earth.animations.getAnimation('burn');
+        if (animation.frame < animation.frameTotal - 1) {
+            animation.frame += 1;
+        }
     }
 
     getRandomOffscreenPoint() {

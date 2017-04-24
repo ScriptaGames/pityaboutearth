@@ -8,13 +8,13 @@ class PreloadState extends Phaser.State {
         this.game.load.image('asteroid', 'images/big/asteroid.png');
         this.game.load.image('background', 'images/big/background.png');
         this.game.load.image('comet', 'images/big/comet.png');
-        this.game.load.image('earth', 'images/big/earth.png');
         this.game.load.image('barrier', 'images/big/barrier.png');
         this.game.load.image('missile-boom', 'images/big/missile-boom.png');
 
 
         // Sprite sheets
 
+        this.game.load.spritesheet('earth-sheet', 'images/big/earth.png', 32*10, 32*10);
         this.game.load.spritesheet('asteroid-sheet', 'images/big/asteroid-sheet.png', 8*10, 8*10);
         this.game.load.spritesheet('asteroid-boom-sheet', 'images/big/asteroid-sheet.png', 10, 10);
         this.game.load.spritesheet('comet-sheet', 'images/big/comet-sheet.png', 16*10, 16*10);
