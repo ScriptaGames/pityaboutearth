@@ -45,7 +45,7 @@ const config = Object.freeze({
     MISSILE_INTERVAL: 200,
 
     // HP/damage config values
-    EARTH_HP: 400,
+    EARTH_HP: 200,
     COMET_DAMAGE: 10,
     ASTEROID_DAMAGE: 4,
 
