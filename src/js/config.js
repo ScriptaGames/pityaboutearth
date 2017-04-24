@@ -25,10 +25,10 @@ const config = Object.freeze({
     BARRIER_WIDTH: 0.6,
 
     // initial velocity of barrage
-    BARRAGE_SPEED: 200,
+    BARRAGE_SPEED: 500,
 
-    // How much variance in initial velocity for each ast in barrage
-    BARRAGE_VARIANCE: 25,
+    // The ms delay between asteroids on the default hard setting
+    BARRAGE_HARD_DELAY: 100,
 
     // how long to start the barrage Siren sound before the barrage is spawned
     BARRANGE_WARNING_TIME: 2.8 * Phaser.Timer.SECOND,

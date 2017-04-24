@@ -15,11 +15,18 @@ class PlayState extends Phaser.State {
 
         this.playMusic();
 
-        this.game.time.events.loop(1000, this.createAsteroid, this);
-        this.game.time.events.loop(5000, this.createComet, this);
-        this.game.time.events.loop(20000, this.createBarrageEvent, this);
+        this.barrageFunctions = [
+            this.createSpiralBarrage.bind(this),
+            this.createZigZagBarrage.bind(this),
+        ];
+
+        this.game.time.events.loop(3000, this.createAsteroid, this);
+        this.game.time.events.loop(6000, this.createComet, this);
         this.game.time.events.loop(5000, this.launchTransport, this);
 
+        this.game.time.events.loop(10000, () => {
+            this.barrageFunctions[this.game.rnd.between(0, this.barrageFunctions.length-1)]();
+        }, this);
     }
 
     update() {
@@ -150,39 +157,59 @@ class PlayState extends Phaser.State {
         return celestial;
     }
 
-    createBarrageEvent(count=60, radius=1200) {
-        // play the siren, wait a bit, then launch the barrage
-        this.sounds.Siren.play();
+    createZigZagBarrage(zagCount=3, count=6, radius=1000, width=90, reverse=false, difficulty=0.5, createCelestialCallback=this.createAsteroid.bind(this)) {
+        if (zagCount == 0) return;
+        let delayOffset = 0;
 
-        this.game.time.events.add(config.BARRANGE_WARNING_TIME, () => this.createBarrage(count, radius), this);
+        for (let i = 0; i < zagCount; i++) {
+            delayOffset = this.createSpiralBarrage(count, radius, width, reverse, difficulty, createCelestialCallback, delayOffset);
+            reverse = !reverse;
+        }
     }
 
-    createBarrage(count=60, radius=1200) {
-        let x, y;
-        let angle = 360 / count;
+    createSpiralBarrage(count=30, radius=1000, width=360, reverse=false, difficulty=0.5, createCelestialCallback=this.createAsteroid.bind(this), delayOffset=0) {
+        if (difficulty == 0) difficulty = 0.01;  // avoid divide by 0
+        if (count == 0) return;
+        if (width > 360) width = 360;
+        if (width <= 0) return;
 
-        this.sounds.Siren.play();
+        let angle = width / count;
+        let delay = delayOffset;
 
-        // spawn asteroids in a circle
-        for (let i = 0; i < 360; i += angle) {
-            x = this.game.world.centerX + radius * Math.cos(i);
-            y = this.game.world.centerY + radius * Math.sin(i);
+        // spawn asteroids in a spiral pattern
+        if (!reverse) {
+            for (let i = 0; i < width; i += angle) {
+                delay += config.BARRAGE_HARD_DELAY / difficulty;
+                this.createBarageCelestial(i, radius, delay, difficulty, createCelestialCallback);
+            }
+        }
+        else {
+            for (let i = width; i > 0; i -= angle) {
+                delay += config.BARRAGE_HARD_DELAY / difficulty;
+                this.createBarageCelestial(i, radius, delay, difficulty, createCelestialCallback);
+            }
+        }
 
-            let ast = this.createAsteroid();
-            ast.position.x = x;
-            ast.position.y = y;
+        return delay;
+    }
+
+    createBarageCelestial(degree, radius, delay, difficulty, createCelestialCallback) {
+        let x = this.game.world.centerX + radius * Math.cos(this.game.math.degToRad(degree));
+        let y = this.game.world.centerY + radius * Math.sin(this.game.math.degToRad(degree));
+
+        this.game.time.events.add(delay, () => {
+            let celest = createCelestialCallback();
+            celest.position.x = x;
+            celest.position.y = y;
 
             // set initial velocity
-            let direction = Phaser.Point.subtract(this.actors.earth.position, ast.position);
+            let v = Phaser.Point.subtract(this.actors.earth.position, celest.position);
 
-            direction.normalize();
-            direction.multiply(config.BARRAGE_SPEED, config.BARRAGE_SPEED);
+            v.normalize();
+            v.multiply(config.BARRAGE_SPEED * difficulty, config.BARRAGE_SPEED * difficulty);
 
-            let vx = this.game.rnd.between(-config.BARRAGE_VARIANCE, config.BARRAGE_VARIANCE);
-            let vy = this.game.rnd.between(-config.BARRAGE_VARIANCE, config.BARRAGE_VARIANCE);
-
-            ast.body.velocity.set(direction.x + vx, direction.y + vy);
-        }
+            celest.body.velocity.set(v.x, v.y);
+        }, this);
     }
 
     createMissile() {
