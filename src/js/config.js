@@ -24,7 +24,7 @@ const config = Object.freeze({
     DEFLECT_BLINK_DURATION: 0.04 * Phaser.Timer.SECOND,
 
     // how wide is the barrier (in degrees)
-    BARRIER_WIDTH: 0.6,
+    BARRIER_WIDTH: 0.65,
 
     // initial velocity of barrage
     BARRAGE_SPEED: 500,
