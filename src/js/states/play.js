@@ -53,6 +53,7 @@ class PlayState extends Phaser.State {
     }
 
     shutdown() {
+        _.forEach(this.sounds, sound => sound.stop());
     }
 
     /* create functions */
@@ -736,6 +737,7 @@ class PlayState extends Phaser.State {
         this.sounds.PlayMusic.fadeOut(300);
         this.sounds.DefeatMusic.fadeIn(300);
         this.sounds.CometHit.play();
+        this.sounds.Siren.fadeOut(200);
 
         const hitTween = this.game.add
             .tween(this.actors.earth)
