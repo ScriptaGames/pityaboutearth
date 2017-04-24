@@ -5,7 +5,7 @@ class MenuState extends Phaser.State {
 
         window.menu = this;
 
-        this.music = this.game.add.audio('MenuMusic');
+        this.music = this.game.add.audio('MenuMusic', 0.7, true);
         this.music.play();
 
         const bg = this.game.add.sprite(0, 0, 'background');

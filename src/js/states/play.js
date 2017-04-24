@@ -101,8 +101,9 @@ class PlayState extends Phaser.State {
 
     createSounds() {
         this.sounds = {
-            AsteroidHit1     : this.game.add.audio('AsteroidHit1'),
-            AsteroidHit2     : this.game.add.audio('AsteroidHit2'),
+            Barrier          : this.game.add.audio('AsteroidHit1'),
+            AsteroidHit      : this.game.add.audio('AsteroidHit2', 0.5),
+            CometHit         : this.game.add.audio('AsteroidHit2', 1.0),
             ButtonTap        : this.game.add.audio('ButtonTap'),
             DropExplosion    : this.game.add.audio('DropExplosion'),
             MissileExplosion : this.game.add.audio('MissileExplosion'),
@@ -115,9 +116,10 @@ class PlayState extends Phaser.State {
             Random5          : this.game.add.audio('Random5'),
             Random6          : this.game.add.audio('Random6'),
             Siren            : this.game.add.audio('Siren'),
-            Barrier          : this.game.add.audio('Barrier'),
+            Rocket1          : this.game.add.audio('Rocket1'),
+            Rocket2          : this.game.add.audio('Rocket2'),
 
-            PlayMusic    : this.game.add.audio('PlayMusic'),
+            PlayMusic    : this.game.add.audio('PlayMusic', 0.1, true),
         };
     }
 
@@ -320,7 +322,7 @@ class PlayState extends Phaser.State {
     asteroidStrike(earth, asteroid) {
         console.log('[play] asteroid strike');
         this.stats.asteroidStrikes += 1;
-        this.sounds.AsteroidHit2.play();
+        const sound = this.sounds.AsteroidHit.play();
         asteroid.destroy();
 
         this.damageEarth(config.ASTEROID_DAMAGE);
@@ -360,7 +362,7 @@ class PlayState extends Phaser.State {
     cometStrike(earth, comet) {
         console.log('[play] comet strike');
         this.stats.cometStrikes += 1;
-        this.sounds.AsteroidHit2.play();
+        this.sounds.CometHit.play();
         comet.destroy();
 
         this.damageEarth(config.COMET_DAMAGE);
@@ -401,7 +403,7 @@ class PlayState extends Phaser.State {
         if (!cel.data.deflected) {
             console.log('[play] celestial deflect');
             cel.data.deflected = true;
-            this.sounds.AsteroidHit1.play();
+            this.sounds.Barrier.play();
             this.stats.deflections += 1;
             this.destroyCelestial(cel);
         }
@@ -464,7 +466,7 @@ class PlayState extends Phaser.State {
     }
 
     playMusic() {
-        this.sounds.PlayMusic.fadeIn(300);
+        this.sounds.PlayMusic.fadeIn(300, true);
     }
 
     launchTransport() {
@@ -472,6 +474,8 @@ class PlayState extends Phaser.State {
         let point = this.transportSpawnPoints[index];
         let transport = this.game.add.sprite(point.x, point.y, 'transport-sheet');
         transport.scale.set(0, 0);
+
+        this.sounds.Rocket2.play();
 
         const enlarge = this.game.add
             .tween(transport.scale)
@@ -518,7 +522,7 @@ class PlayState extends Phaser.State {
 
         this.stats.missilesFired += 1;
 
-        this.sounds.EscapeLaunch.play();
+        this.sounds.Rocket1.play();
 
         const xCenter = x - missile.position.x;
         const yCenter = y - missile.position.y;
@@ -611,6 +615,7 @@ class PlayState extends Phaser.State {
 
     blowUpEarth() {
         this.actors.earth.destroy();
+        this.actors.barrier.destroy();
         this.sounds.Random5.play();
         this.sounds.Random2.play();
         console.log('[play] KABOOOOOOM!');
