@@ -36,6 +36,9 @@ const config = Object.freeze({
     MAX_TIME_BETWEEN_BARRAGE: 15000,
     MIN_TIME_BETWEEN_BARRAGE: 4000,
 
+    // what is the chance of getting a comet barrage
+    PERCENT_CHANCE_OF_COMET_BARRAGE: 15,
+
     // how long to start the barrage Siren sound before the barrage is spawned
     BARRANGE_WARNING_TIME: 2.8 * Phaser.Timer.SECOND,
 

@@ -542,10 +542,16 @@ class PlayState extends Phaser.State {
         // get random barrage function
         let barrageFunc = this.barrageFunctions[this.between(0, this.barrageFunctions.length - 1)];
 
+        let isComet = (100 * Math.random()) <= config.PERCENT_CHANCE_OF_COMET_BARRAGE;
+        let createCallback = this.createAsteroid.bind(this);
+        if (isComet) {
+            createCallback = this.createComet.bind(this);
+        }
+
         if (barrageFunc.name == 'createColumnBarrage') {
             let columnCount = this.between(2, 6);
             let celestPerColumn = this.between(3, 10);
-            barrageFunc.bind(this)(columnCount, celestPerColumn, this.difficulty);
+            barrageFunc.bind(this)(columnCount, celestPerColumn, this.difficulty, createCallback);
         }
         else {
             let count = this.between(10, 30);
@@ -558,7 +564,7 @@ class PlayState extends Phaser.State {
                 width = this.between(60, 180);
             }
 
-            barrageFunc.bind(this)(count, 1000, width, offset, reverse, this.difficulty);
+            barrageFunc.bind(this)(count, 1000, width, offset, reverse, this.difficulty, createCallback);
         }
     }
 
