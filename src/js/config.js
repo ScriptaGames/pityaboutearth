@@ -44,4 +44,9 @@ const config = Object.freeze({
     // how often can you launch missiles
     MISSILE_INTERVAL: 300,
 
+    // HP/damage config values
+    EARTH_HP: 400,
+    COMET_DAMAGE: 10,
+    ASTEROID_DAMAGE: 4,
+
 });

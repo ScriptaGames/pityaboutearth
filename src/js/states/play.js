@@ -91,6 +91,7 @@ class PlayState extends Phaser.State {
             transportsEscaped   : 0,
             transportsDestroyed : 0,
             celestialsDestroyed : 0,
+            earthHP             : config.EARTH_HP,
         };
     }
 
@@ -322,6 +323,8 @@ class PlayState extends Phaser.State {
         this.sounds.AsteroidHit2.play();
         asteroid.destroy();
 
+        this.damageEarth(config.ASTEROID_DAMAGE);
+
         const burstEmitter = game.add.emitter(0, 0, 64);
         burstEmitter.makeParticles('asteroid-boom-sheet',
             new Array(64).fill(0).map((v,i) => i),
@@ -359,6 +362,8 @@ class PlayState extends Phaser.State {
         this.stats.cometStrikes += 1;
         this.sounds.AsteroidHit2.play();
         comet.destroy();
+
+        this.damageEarth(config.COMET_DAMAGE);
 
         const burstEmitter = game.add.emitter(0, 0, 256);
         burstEmitter.makeParticles('comet-boom-sheet',
@@ -583,11 +588,32 @@ class PlayState extends Phaser.State {
         return false;
     }
 
-    advanceEarthDamage() {
-        const animation = this.actors.earth.animations.getAnimation('burn');
-        if (animation.frame < animation.frameTotal - 1) {
-            animation.frame += 1;
+    damageEarth(dmg) {
+        this.stats.earthHP = Math.max(this.stats.earthHP - dmg, 0);
+        const spriteIndex = Math.floor((config.EARTH_HP - this.stats.earthHP) / (config.EARTH_HP / (this.actors.earth.animations.getAnimation('burn').frameTotal - 1)));
+        console.log(`[play] earth sprite ${spriteIndex}`);
+
+        if (spriteIndex <= 9) {
+            this.setEarthDamageSprite(spriteIndex);
         }
+
+        if (spriteIndex === 9 && !this.actors.earth.data.exploding) {
+            this.actors.earth.data.exploding = true;
+            this.sounds.Siren.play();
+            this.game.time.events.add(14000, this.blowUpEarth, this);
+        }
+    }
+
+    setEarthDamageSprite(index) {
+        const animation = this.actors.earth.animations.getAnimation('burn');
+        animation.frame = index;
+    }
+
+    blowUpEarth() {
+        this.actors.earth.destroy();
+        this.sounds.Random5.play();
+        this.sounds.Random2.play();
+        console.log('[play] KABOOOOOOM!');
     }
 
     getRandomOffscreenPoint() {
