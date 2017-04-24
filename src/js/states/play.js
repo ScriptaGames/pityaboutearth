@@ -557,37 +557,39 @@ class PlayState extends Phaser.State {
     }
 
     fireMissile({ position }) {
-        const missile = this.createMissile();
-        missile.scale.set(0, 0);
-        const { x, y } = position;
+        if (this.isAlive()) {
+            const missile = this.createMissile();
+            missile.scale.set(0, 0);
+            const { x, y } = position;
 
-        this.stats.missilesFired += 1;
+            this.stats.missilesFired += 1;
 
-        this.sounds.MissileLaunch.play();
+            this.sounds.MissileLaunch.play();
 
-        const xCenter = x - missile.position.x;
-        const yCenter = y - missile.position.y;
-        let angle = -1 * Math.atan(xCenter/yCenter) + 2*Math.PI;
-        if (yCenter > 0) {
-            angle += Math.PI;
+            const xCenter = x - missile.position.x;
+            const yCenter = y - missile.position.y;
+            let angle = -1 * Math.atan(xCenter/yCenter) + 2*Math.PI;
+            if (yCenter > 0) {
+                angle += Math.PI;
+            }
+            missile.rotation = angle;
+
+            const enlarge = this.game.add
+                .tween(missile.scale)
+                .to( { x: 1, y: 1 },
+                    1000,
+                    Phaser.Easing.Linear.None,
+                    true
+                );
+            const trajectory = this.game.add
+                .tween(missile.position)
+                .to( { x, y },
+                    1000,
+                    Phaser.Easing.Cubic.In,
+                    true
+                );
+            trajectory.onComplete.add(() => this.explodeMissile(missile), this);
         }
-        missile.rotation = angle;
-
-        const enlarge = this.game.add
-            .tween(missile.scale)
-            .to( { x: 1, y: 1 },
-                1000,
-                Phaser.Easing.Linear.None,
-                true
-            );
-        const trajectory = this.game.add
-            .tween(missile.position)
-            .to( { x, y },
-                1000,
-                Phaser.Easing.Cubic.In,
-                true
-            );
-        trajectory.onComplete.add(() => this.explodeMissile(missile), this);
     }
 
     explodeMissile(missile) {
@@ -695,6 +697,10 @@ class PlayState extends Phaser.State {
         this.sounds.Random5.play();
         this.sounds.Random2.play();
         console.log('[play] KABOOOOOOM!');
+    }
+
+    isAlive() {
+        return this.stats.earthHP > 0;
     }
 
     getRandomOffscreenPoint() {
