@@ -355,20 +355,44 @@ class PlayState extends Phaser.State {
         cel.body.velocity.copyFrom(bounceDir);
     }
 
-    destroyCelestial(cel) {
-        const destroyTween = this.game.add
-            .tween(cel)
-            .to(
-                {
-                    alpha: 0.6,
-                },
-                config.DEFLECT_BLINK_DURATION,
-                Phaser.Easing.Linear.None,
-                true,
-                0,
-                10,
-                true
-            );
+    destroyCelestial(cel, fromBoom=false) {
+        let destroyTween;
+        if (fromBoom) {
+            destroyTween = this.game.add
+                .tween(cel)
+                .to(
+                    {
+                        alpha: 0.0,
+                        tint: 0xff0000,
+                    },
+                    315,
+                    Phaser.Easing.Linear.None,
+                    true
+                );
+            this.game.add
+                .tween(cel.scale)
+                .to(
+                    { x: 1.5, y: 1.5 },
+                    315,
+                    Phaser.Easing.Linear.None,
+                    true
+                );
+        }
+        else {
+            destroyTween = this.game.add
+                .tween(cel)
+                .to(
+                    {
+                        alpha: 0.6,
+                    },
+                    config.DEFLECT_BLINK_DURATION,
+                    Phaser.Easing.Linear.None,
+                    true,
+                    0,
+                    10,
+                    true
+                );
+        }
         destroyTween.onComplete.add(() => cel.destroy(), this);
     }
 
@@ -504,7 +528,7 @@ class PlayState extends Phaser.State {
     }
 
     boomHit(boom, celestial) {
-        this.destroyCelestial(celestial);
+        this.destroyCelestial(celestial, true);
         this.stats.celestialsDestroyed += 1;
         return false;
     }
