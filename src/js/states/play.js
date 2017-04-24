@@ -19,8 +19,9 @@ class PlayState extends Phaser.State {
         this.difficulty = config.DIFFICULTY;
 
         this.barrageFunctions = [
-            this.createSpiralBarrage,
-            this.createZigZagBarrage,
+            // this.createSpiralBarrage,
+            // this.createZigZagBarrage,
+            this.createColumnBarrage,
         ];
 
         this.game.time.events.loop(3000, this.createAsteroid, this);
@@ -31,17 +32,24 @@ class PlayState extends Phaser.State {
         this.game.time.events.loop(15000, () => {
             let barrageFunc = this.barrageFunctions[this.between(0, this.barrageFunctions.length-1)];
 
-            let count = this.between(10, 30);
-            let width = this.between(120, 359);
-            let offset = this.between(0, 360);
-            let reverse = this.between(0, 1);
-
-            if (barrageFunc.name == 'createZigZagBarrage') {
-                count = this.between(3, 10);
-                width = this.between(40, 120);
+            if (barrageFunc.name == 'createColumnBarrage') {
+                let columnCount = this.between(2, 6);
+                let celestPerColumn = this.between(3, 10);
+                barrageFunc.bind(this)(columnCount, celestPerColumn, this.difficulty);
             }
+            else {
+                let count = this.between(10, 30);
+                let width = this.between(120, 359);
+                let offset = this.between(0, 360);
+                let reverse = this.between(0, 1);
 
-            barrageFunc.bind(this)(count, 1000, width, offset, reverse, this.difficulty);
+                if (barrageFunc.name == 'createZigZagBarrage') {
+                    count = this.between(8, 16);
+                    width = this.between(60, 180);
+                }
+
+                barrageFunc.bind(this)(count, 1000, width, offset, reverse, this.difficulty);
+            }
 
             // Increase the difficulty
             this.difficulty += 0.1;
@@ -209,20 +217,50 @@ class PlayState extends Phaser.State {
         if (!reverse) {
             for (let i = 0 + offset; i < width + offset; i += angle) {
                 delay += config.BARRAGE_HARD_DELAY / difficulty;
-                this.createBarageCelestial(i, radius, delay, difficulty, createCelestialCallback);
+                this.createBarrageCelestial(i, radius, delay, difficulty, createCelestialCallback);
             }
         }
         else {
             for (let i = width + offset; i > 0 + offset; i -= angle) {
                 delay += config.BARRAGE_HARD_DELAY / difficulty;
-                this.createBarageCelestial(i, radius, delay, difficulty, createCelestialCallback);
+                this.createBarrageCelestial(i, radius, delay, difficulty, createCelestialCallback);
             }
         }
 
         return delay;
     }
 
-    createBarageCelestial(degree, radius, delay, difficulty, createCelestialCallback) {
+    createColumnBarrage(numColumns=4, celestPerColumn=4, difficulty=0.2, createCelestialCallback=this.createAsteroid.bind(this)) {
+        // Get random off screen points for num of columns
+        let points = [];
+        let delay = 0;
+
+        for (let i = 0; i < numColumns; i++) {
+            points.push(this.getRandomOffscreenPoint());
+        }
+
+        points.forEach((point) => {
+            for (let i = 0; i < celestPerColumn; i++) {
+                this.game.time.events.add(delay, () => {
+                    let celest = createCelestialCallback();
+                    celest.position.x = point.x;
+                    celest.position.y = point.y;
+
+                    // set initial velocity
+                    let v = Phaser.Point.subtract(this.actors.earth.position, celest.position);
+
+                    v.normalize();
+                    v.multiply(config.BARRAGE_SPEED * difficulty, config.BARRAGE_SPEED * difficulty);
+
+                    celest.body.velocity.set(v.x, v.y);
+                }, this);
+                delay += config.BARRAGE_HARD_DELAY / difficulty;
+            }
+            delay += (config.BARRAGE_HARD_DELAY / difficulty) + 100;
+        })
+    }
+
+    createBarrageCelestial(degree, radius, delay, difficulty, createCelestialCallback) {
         let x = this.game.world.centerX + radius * Math.cos(this.game.math.degToRad(degree));
         let y = this.game.world.centerY + radius * Math.sin(this.game.math.degToRad(degree));
 
@@ -626,7 +664,7 @@ class PlayState extends Phaser.State {
 
     getRandomOffscreenPoint() {
         let self = this;
-        let padding = 200;
+        let padding = 100;
 
         let functions = [
             () => {
