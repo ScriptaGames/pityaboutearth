@@ -19,7 +19,7 @@ class MenuState extends Phaser.State {
 
         this.story = [
             `Humanity, listen up. This is`,
-            `the Univese. I am sick of`,
+            `the Universe. I am sick of`,
             `your incessant nosing about.`,
             `The incoming asteroid should`,
             `resolve matters.`,
