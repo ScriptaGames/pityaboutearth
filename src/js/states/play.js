@@ -176,7 +176,7 @@ class PlayState extends Phaser.State {
         earth.animations.getAnimation('burn').frame = 0;
 
         this.game.physics.arcade.enableBody(earth);
-        earth.body.setCircle(earth.width / 2);
+        earth.body.setCircle(earth.width / 2 - 30, 30, 30);
         earth.body.immovable = true;
 
         earth.anchor.set(0.5, 0.5);
