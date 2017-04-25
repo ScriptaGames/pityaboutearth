@@ -837,7 +837,7 @@ class PlayState extends Phaser.State {
                 { x: 2, y: 2 },
                 3600,
                 Phaser.Easing.Linear.None,
-                true,
+                true
             );
         scaleTween.onComplete.add(() => this.actors.earth.destroy(), this);
 
