@@ -73,9 +73,11 @@ class PlayState extends Phaser.State {
         this.game.time.events.add(10300, () => {
             this.game.time.events.loop(3000, this.createAsteroid, this);
             this.game.time.events.loop(6000, this.createComet, this);
-            this.game.time.events.loop(5000, this.launchTransport, this);
             this.game.time.events.loop(1000, () => this.difficulty += 0.02, this); // Increase the difficulty
             this.game.time.events.add(this.timeToNextBarrage, this.fireBarrage.bind(this), this);
+        }, this);
+        this.game.time.events.add(13300, () => {
+            this.game.time.events.loop(5000, this.launchTransport, this);
         }, this);
 
     }
@@ -84,6 +86,7 @@ class PlayState extends Phaser.State {
         this.updateCelestials();
         this.updateCollisions();
         this.updateBarrierRotation();
+        this.updateScoreBar();
     }
 
     render() {
@@ -104,6 +107,7 @@ class PlayState extends Phaser.State {
         this.actors = {
             earth: this.createEarth(),
             healthbar: this.createEarthHealthBar(),
+            scorebar: this.createScoreBar(),
             barrier: this.createBarrier(),
             asteroids: this.game.add.group(),
             comets: this.game.add.group(),
@@ -111,7 +115,6 @@ class PlayState extends Phaser.State {
             booms: this.game.add.group(),
             transports: this.game.add.group(),
         };
-
     }
 
     createStats() {
@@ -187,6 +190,25 @@ class PlayState extends Phaser.State {
         earth.scale.setTo(1.15, 1.15);
         let healthbar = this.game.add.sprite(70, 20, 'healthbar', 0);
         this.healthFilling = this.game.add.sprite(80, 30, 'health-filling', 0);
+    }
+
+    createScoreBar() {
+        console.log('[play] score bar');
+        const person = this.game.add.sprite(this.game.world.width - 20, 23, 'person');
+        person.anchor.set(1, 0);
+        person.scale.set(0.5, 0.5);
+
+        const fontSet = `! "#$%^'()* +,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_abcdefghijklmnopqrstuvwxyz{|}~`;
+        const font = this.game.add.retroFont('gelatin-font', 70, 110, fontSet, 18, 0, 0);
+        const text = this.game.add.image(80, 80, font);
+        text.scale.set(0.5,0.5);
+        text.tint = 0x777777;
+        text.position.x = this.game.world.width - 60;
+        text.position.y = 14;
+        text.anchor.set(1, 0);
+        text.bringToTop();
+
+        return font;
     }
 
     createAsteroid() {
@@ -372,6 +394,10 @@ class PlayState extends Phaser.State {
         this.game.physics.arcade.collide(this.actors.booms, this.actors.comets, null, this.boomHit, this);
         this.game.physics.arcade.collide(this.actors.earth, this.actors.asteroids, this.asteroidStrike, null, this);
         this.game.physics.arcade.collide(this.actors.earth, this.actors.comets, this.cometStrike, null, this);
+    }
+
+    updateScoreBar() {
+        this.actors.scorebar.text = ''+(this.stats.transportsLaunched * 1000);
     }
 
     updateBarrierRotation() {

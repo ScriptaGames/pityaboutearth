@@ -49,9 +49,9 @@ class MenuState extends Phaser.State {
             // `                  -- Carl Sagan`,
         ];
 
-        const btnHum = game.add.button(
-            game.world.centerX,
-            game.world.height - 130,
+        const btnHum = this.game.add.button(
+            this.game.world.centerX,
+            this.game.world.height - 130,
             'btn-play',
             this.next,
             this,
@@ -103,7 +103,7 @@ class MenuState extends Phaser.State {
         const x = -400;
         const y = 68;
         const barrier = this.game.add.sprite(this.game.world.centerX + x - 100, this.game.world.height - 670 + y, 'barrier');
-        const font = game.add.retroFont('gelatin-font', 70, 110, this.fontSet, 18, 0, 0);
+        const font = this.game.add.retroFont('gelatin-font', 70, 110, this.fontSet, 18, 0, 0);
         const text = this.game.add.image(80, 80, font);
         text.scale.set(0.5,0.5);
         font.text = 'Barrier';
@@ -118,7 +118,7 @@ class MenuState extends Phaser.State {
         const mouse = this.game.add.sprite(this.game.world.centerX - 44 + x, this.game.world.height - 600 + y, 'mouse');
         mouse.anchor.set(0.5, 0.5);
 
-        const font = game.add.retroFont('gelatin-font', 70, 110, this.fontSet, 18, 0, 0);
+        const font = this.game.add.retroFont('gelatin-font', 70, 110, this.fontSet, 18, 0, 0);
         const text = this.game.add.image(80, 80, font);
         text.scale.set(0.5,0.5);
         font.text = 'Missile';
@@ -129,7 +129,7 @@ class MenuState extends Phaser.State {
     }
 
     writeLine(line, index) {
-        const font = game.add.retroFont('gelatin-font', 70, 110, this.fontSet, 18, 0, 0);
+        const font = this.game.add.retroFont('gelatin-font', 70, 110, this.fontSet, 18, 0, 0);
         const text = this.game.add.image(80, 80, font);
         text.scale.set(0.5,0.5);
         font.text = '';
