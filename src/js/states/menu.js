@@ -101,7 +101,7 @@ class MenuState extends Phaser.State {
     }
 
     drawBarrierHelp() {
-        const x = -400;
+        const x = -370;
         const y = 68;
         const barrier = this.game.add.sprite(this.game.world.centerX + x - 100, this.game.world.height - 670 + y, 'barrier');
         const font = this.game.add.retroFont('gelatin-font', 70, 110, this.fontSet, 18, 0, 0);
