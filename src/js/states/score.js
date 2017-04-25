@@ -17,6 +17,7 @@ class ScoreState extends Phaser.State {
 
         const logo = this.game.add.sprite(this.game.world.centerX, 120, 'logo');
         logo.anchor.set(0.5, 0);
+        logo.scale.set(0.96, 0.96);
 
         this.fontSet = `! "#$%^'()* +,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_abcdefghijklmnopqrstuvwxyz{|}~`;
 
