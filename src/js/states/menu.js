@@ -18,11 +18,12 @@ class MenuState extends Phaser.State {
         this.fontSet = `! "#$%^'()* +,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_abcdefghijklmnopqrstuvwxyz{|}~`;
 
         this.story = [
-            `"Earth?  It was a fine planet,`,
-            `that is until the Universe`,
-            `wearied of our incessant`,
-            `nosing about and sent an`,
-            `asteroid careening our way.`,
+            `Humanity, listen up. This is`,
+            `the Univese. I am sick of`,
+            `your incessant nosing about.`,
+            `The incoming asteroid should`,
+            `resolve matters.`,
+            `       -- Yours, the Universe`,
             ``,
             `(Protect Earth while shuttles`,
             `ferry "repopulation experts"`,
@@ -136,7 +137,7 @@ class MenuState extends Phaser.State {
         font.text = '';
         // text.tint = 0x51B5E0;
         text.position.x = 60;
-        text.position.y = index * this.lineHeight + 636;
+        text.position.y = index * this.lineHeight + 600;
         let i = 0;
 
         this.game.time.events.loop(this.timePerChar, () => {
