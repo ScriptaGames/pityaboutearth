@@ -11,8 +11,13 @@ class PlayState extends Phaser.State {
         this.createStats();
 
         this.createActors();
-        this.generateTransportSpawnPoints();
         this.createMissileLauncher();
+
+        // Generate points that the transports will launch from
+        this.transportSpawnPoints = this.generateCirclePoints(20, 100);
+
+        // Generate the points that column barrages will come from
+        this.columnBarrageSpawnPoints = this.generateCirclePoints();
 
         this.playMusic();
 
@@ -293,7 +298,8 @@ class PlayState extends Phaser.State {
         let delay = 0;
 
         for (let i = 0; i < numColumns; i++) {
-            points.push(this.getRandomOffscreenPoint());
+            let spawnPoint = this.columnBarrageSpawnPoints[this.between(0, this.columnBarrageSpawnPoints.length - 1)];
+            points.push(spawnPoint);
         }
 
         points.forEach((point) => {
@@ -313,7 +319,7 @@ class PlayState extends Phaser.State {
                 }, this);
                 delay += config.BARRAGE_HARD_DELAY / difficulty;
             }
-            delay += (config.BARRAGE_HARD_DELAY / difficulty) + 100;
+            delay += Math.max((config.BARRAGE_HARD_DELAY / difficulty), config.BARRAGE_HARD_DELAY);
         })
     }
 
@@ -955,20 +961,19 @@ class PlayState extends Phaser.State {
         return f();
     }
 
-    generateTransportSpawnPoints(count=36) {
-        if (this.isAlive()) {
-            this.transportSpawnPoints = [];
+    generateCirclePoints(count=36, width=1000) {
+        let x, y;
+        let angle = 360 / count;
+        let circlePoints = [];
 
-            let x, y;
-            let angle = 360 / count;
+        // generate a list of x y points around a circle
+        for (let i = 0.1; i < 360; i += angle) {
+            x = this.game.world.centerX + width * Math.cos(this.game.math.degToRad(i));
+            y = this.game.world.centerY + width * Math.sin(this.game.math.degToRad(i));
 
-            // spawn asteroids in a circle
-            for (let i = 0.1; i < 360; i += angle) {
-                x = this.game.world.centerX + 100 * Math.cos(i);
-                y = this.game.world.centerY + 100 * Math.sin(i);
-
-                this.transportSpawnPoints.push({x, y});
-            }
+            circlePoints.push({x, y});
         }
+
+        return circlePoints;
     }
 }

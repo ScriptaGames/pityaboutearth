@@ -30,7 +30,7 @@ const config = Object.freeze({
     BARRAGE_SPEED: 500,
 
     // The ms delay between asteroids on the default hard setting
-    BARRAGE_HARD_DELAY: 100,
+    BARRAGE_HARD_DELAY: 250,
 
     // The initial time between barrages
     MAX_TIME_BETWEEN_BARRAGE: 15000,
