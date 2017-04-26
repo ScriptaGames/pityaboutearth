@@ -21,7 +21,6 @@ class PlayState extends Phaser.State {
 
         this.playMusic();
 
-        this.difficulty = config.DIFFICULTY;
         this.timeToNextBarrage = config.MAX_TIME_BETWEEN_BARRAGE;
 
         this.barrageFunctions = [
@@ -78,7 +77,7 @@ class PlayState extends Phaser.State {
         this.game.time.events.add(10300, () => {
             this.game.time.events.loop(3000, this.createAsteroid, this);
             this.game.time.events.loop(6000, this.createComet, this);
-            this.game.time.events.loop(1000, () => this.difficulty += config.DIFFICULTY_INCREASE_RATE, this); // Increase the difficulty
+            this.game.time.events.loop(1000, () => this.stats.difficulty += config.DIFFICULTY_INCREASE_RATE, this); // Increase the difficulty
             this.game.time.events.add(config.MAX_TIME_BETWEEN_BARRAGE, this.fireBarrage.bind(this), this);
         }, this);
         this.game.time.events.add(13300, () => {
@@ -133,6 +132,7 @@ class PlayState extends Phaser.State {
             transportsDestroyed : 0,
             celestialsDestroyed : 0,
             earthHP             : config.EARTH_HP,
+            difficulty          : config.DIFFICULTY,
         };
     }
 
@@ -280,13 +280,13 @@ class PlayState extends Phaser.State {
         // spawn asteroids in a spiral pattern
         if (!reverse) {
             for (let i = 0 + offset; i < width + offset; i += angle) {
-                delay += config.BARRAGE_SINGLE_CEL_HARD_DELAY / difficulty;
+                delay += Math.max(config.BARRAGE_SINGLE_CEL_HARD_DELAY / difficulty, config.BARRAGE_SINGLE_CEL_MIN_DELAY);
                 this.createBarrageCelestial(i, radius, delay, difficulty, createCelestialCallback);
             }
         }
         else {
             for (let i = width + offset; i > 0 + offset; i -= angle) {
-                delay += config.BARRAGE_SINGLE_CEL_HARD_DELAY / difficulty;
+                delay += Math.max(config.BARRAGE_SINGLE_CEL_HARD_DELAY / difficulty, config.BARRAGE_SINGLE_CEL_MIN_DELAY);
                 this.createBarrageCelestial(i, radius, delay, difficulty, createCelestialCallback);
             }
         }
@@ -321,7 +321,7 @@ class PlayState extends Phaser.State {
 
                     celest.body.velocity.set(v.x, v.y);
                 }, this);
-                delay += config.BARRAGE_SINGLE_CEL_HARD_DELAY / difficulty;
+                delay += Math.max(config.BARRAGE_SINGLE_CEL_HARD_DELAY / difficulty, config.BARRAGE_SINGLE_CEL_MIN_DELAY);
             }
             delay += Math.max((config.BARRAGE_MIN_COLUMN_DELAY / difficulty), config.BARRAGE_MIN_COLUMN_DELAY);
         });
@@ -647,7 +647,7 @@ class PlayState extends Phaser.State {
         if (barrageFunc.name == 'createColumnBarrage') {
             let columnCount = this.between(2, 6);
             let celestPerColumn = this.between(3, 10);
-            barrageDuration = barrageFunc.bind(this)(columnCount, celestPerColumn, this.difficulty, createCallback);
+            barrageDuration = barrageFunc.bind(this)(columnCount, celestPerColumn, this.stats.difficulty, createCallback);
         }
         else {
             let count = this.between(10, 30);
@@ -660,14 +660,14 @@ class PlayState extends Phaser.State {
                 width = this.between(60, 180);
             }
 
-            barrageDuration = barrageFunc.bind(this)(count, 1000, width, offset, reverse, this.difficulty, createCallback);
+            barrageDuration = barrageFunc.bind(this)(count, 1000, width, offset, reverse, this.stats.difficulty, createCallback);
         }
 
         // First schedule next barrage
-        this.timeToNextBarrage = Math.min(this.timeToNextBarrage / this.difficulty, config.MAX_TIME_BETWEEN_BARRAGE);
+        this.timeToNextBarrage = Math.min(this.timeToNextBarrage / this.stats.difficulty, config.MAX_TIME_BETWEEN_BARRAGE);
         this.timeToNextBarrage = Math.max(this.timeToNextBarrage, config.MIN_TIME_BETWEEN_BARRAGE);
         this.timeToNextBarrage += barrageDuration;
-        console.log("[play] time to next barrage: ", this.timeToNextBarrage, this.difficulty, barrageDuration);
+        console.log("[play] time to next barrage: ", this.timeToNextBarrage, this.stats.difficulty, barrageDuration);
         this.game.time.events.add(this.timeToNextBarrage, this.fireBarrage.bind(this));
     }
 

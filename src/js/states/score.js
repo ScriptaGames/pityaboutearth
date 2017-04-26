@@ -39,7 +39,7 @@ class ScoreState extends Phaser.State {
                 `"Job well done!" -- Universe`,
             ];
         }
-        else if (this.stats.transportsLaunched >= 20) {
+        else if (this.stats.transportsLaunched >= 25) {
             this.story = [
                 `WOW, you saved`,
                 `${this.stats.transportsLaunched*1000}`,

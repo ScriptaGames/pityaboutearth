@@ -33,12 +33,13 @@ const config = Object.freeze({
 
     // The ms delay between asteroids on the default hard setting
     BARRAGE_SINGLE_CEL_HARD_DELAY: 100,
+    BARRAGE_SINGLE_CEL_MIN_DELAY: 50,
 
     // The minimum delay between columns in a column barrage
     BARRAGE_MIN_COLUMN_DELAY: 250,
 
     // The initial time between barrages
-    MAX_TIME_BETWEEN_BARRAGE: 10000,
+    MAX_TIME_BETWEEN_BARRAGE: 8000,
     MIN_TIME_BETWEEN_BARRAGE: 1000,
 
     // what is the chance of getting a comet barrage
