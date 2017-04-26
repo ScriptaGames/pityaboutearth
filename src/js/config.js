@@ -4,6 +4,7 @@ const config = Object.freeze({
     SKIP_MENU: false,
 
     DIFFICULTY: 0.2, // base difficulty pretty easy
+    DIFFICULTY_INCREASE_RATE: 0.015, // How much to increase the difficulty per second
 
     // canvas resolution
     CANVAS_WIDTH: 1180,
@@ -27,14 +28,18 @@ const config = Object.freeze({
     BARRIER_WIDTH: 0.65,
 
     // initial velocity of barrage
-    BARRAGE_SPEED: 500,
+    BARRAGE_SPEED: 1200,
+    BARRAGE_MAX_MULTIPLIER: 2000,
 
     // The ms delay between asteroids on the default hard setting
-    BARRAGE_HARD_DELAY: 250,
+    BARRAGE_SINGLE_CEL_HARD_DELAY: 100,
+
+    // The minimum delay between columns in a column barrage
+    BARRAGE_MIN_COLUMN_DELAY: 250,
 
     // The initial time between barrages
-    MAX_TIME_BETWEEN_BARRAGE: 15000,
-    MIN_TIME_BETWEEN_BARRAGE: 4000,
+    MAX_TIME_BETWEEN_BARRAGE: 10000,
+    MIN_TIME_BETWEEN_BARRAGE: 1000,
 
     // what is the chance of getting a comet barrage
     PERCENT_CHANCE_OF_COMET_BARRAGE: 15,
