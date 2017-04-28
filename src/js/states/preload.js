@@ -2,6 +2,12 @@ class PreloadState extends Phaser.State {
     preload() {
         console.log('[preload] preloading assets');
 
+        // loading bar
+
+        this.loadingBar = this.game.add.sprite(300, this.game.world.centerY, 'loading-bar');
+        this.load.setPreloadSprite(this.loadingBar);
+        this.loadingBar.anchor.set(0, 0.5);
+
         // images
 
         this.game.load.image('logo', 'images/big/logo.png');
@@ -61,10 +67,6 @@ class PreloadState extends Phaser.State {
         this.game.load.audio('Barrier'          , 'sounds/Effects/Effect_Barrier.mp3');
         this.game.load.audio('Rocket1'          , 'sounds/Effects/Effect_Rocket1.mp3');
         this.game.load.audio('Rocket2'          , 'sounds/Effects/Effect_Rocket2.mp3');
-
-        // shaders
-
-        // this.game.load.text('portal-frag' , 'shaders/portal.frag');
 
     }
 
