@@ -21,6 +21,19 @@ class ScoreState extends Phaser.State {
 
         this.fontSet = `! "#$%^'()* +,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_abcdefghijklmnopqrstuvwxyz{|}~`;
 
+        const score = this.stats.transportsLaunched * 1000;
+        const hiscore = JSON.parse(localStorage.hiscore || '0');
+
+        localStorage.hiscore = Math.max(hiscore, score);
+
+            console.log(`[play] score is ${score}`);
+        if (score > hiscore) {
+            console.log(`[play] ${score} > ${hiscore}, new HISCORE!!!`);
+        }
+        else {
+            console.log(`[play] hiscore is still ${hiscore}`);
+        }
+
         if (this.stats.transportsLaunched === 0) {
             this.story = [
                 `Really, you saved ZERO`,
@@ -29,7 +42,7 @@ class ScoreState extends Phaser.State {
         }
         else if (this.stats.transportsLaunched < 10) {
             this.story = [
-                `You saved ${this.stats.transportsLaunched*1000}`,
+                `You saved ${score}`,
                 `people... that's not nearly`,
                 `enough to repopulate the`,
                 `species.`,
@@ -42,14 +55,14 @@ class ScoreState extends Phaser.State {
         else if (this.stats.transportsLaunched >= 25) {
             this.story = [
                 `WOW, you saved`,
-                `${this.stats.transportsLaunched*1000}`,
+                `${score}`,
                 `people!!!  Humanity survives!`,
             ];
         }
         else {
             this.story = [
                 `Well done, you saved`,
-                `${this.stats.transportsLaunched*1000}`,
+                `${score}`,
                 `people.  Humanity is probably`,
                 `still doomed, but will have`,
                 `a good time with the`,
