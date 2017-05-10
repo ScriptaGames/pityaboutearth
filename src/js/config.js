@@ -3,6 +3,9 @@ const config = Object.freeze({
     // skip menu for quick testing
     SKIP_MENU: false,
 
+    // which control scheme to use
+    CONTROLS: isMobile.any ? 'TOUCH' : 'MOUSE',
+
     DIFFICULTY: 0.2, // base difficulty pretty easy
     DIFFICULTY_INCREASE_RATE: 0.015, // How much to increase the difficulty per second
 

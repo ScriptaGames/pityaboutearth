@@ -9,6 +9,7 @@ class PlayState extends Phaser.State {
         this.createBackground();
         this.createSounds();
         this.createStats();
+        this.createControls();
 
         this.createActors();
         this.createMissileLauncher();
@@ -87,9 +88,9 @@ class PlayState extends Phaser.State {
     }
 
     update() {
+        this.updateControls();
         this.updateCelestials();
         this.updateCollisions();
-        this.updateBarrierRotation();
         this.updateScoreBar();
     }
 
@@ -134,6 +135,31 @@ class PlayState extends Phaser.State {
             earthHP             : config.EARTH_HP,
             difficulty          : config.DIFFICULTY,
         };
+    }
+
+    createControls() {
+        // set updateControls function to point to the update function for
+        // whichever control scheme is active
+        switch (config.CONTROLS) {
+            case 'TOUCH':
+                console.log(`[play] creating touch controls`);
+                this.createTouchControls();
+                this.updateControls = this.updateTouchControls.bind(this);
+                break;
+            case 'MOUSE':
+                console.log(`[play] creating mouse controls`);
+                this.updateControls = this.updateMouseControls.bind(this);
+                break;
+        }
+    }
+
+    createTouchControls() {
+        if (isMobile.any) {
+            this.touchControl = this.game.plugins.add(Phaser.Plugin.TouchControl);
+            this.touchControl.maxDistanceInPixels = 100;
+            this.touchControl.inputEnable();
+            this.touchControl.direction = new Phaser.Point();
+        }
     }
 
     createMissileLauncher() {
@@ -397,6 +423,7 @@ class PlayState extends Phaser.State {
         this.game.physics.arcade.enableBody(barrier);
         barrier.body.setCircle(barrier.width / 2);
         barrier.body.immovable = true;
+        barrier.data.direction = new Phaser.Point();
 
         return barrier;
     }
@@ -416,10 +443,30 @@ class PlayState extends Phaser.State {
         this.actors.scorebar.text = ''+(this.stats.transportsLaunched * 1000);
     }
 
-    updateBarrierRotation() {
+    updateControls() {
+    }
+
+    /**
+     * @param {number} angle The angle in radians the barrier is facing.
+     * @param {number} x The x coordinate, relative to the barrier circle, of the barrier bar's center.
+     * @param {number} y The y coordinate, relative to the barrier circle, of the barrier bar's center.
+     */
+    updateBarrierRotation(angle, x, y) {
+        this.actors.barrier.rotation = angle;
+        this.actors.barrier.data.direction.set(x, y).normalize();
+    }
+
+    updateTouchControls() {
+        const {x, y} = this.touchControl.speed;
+        const angle = -Math.PI/2 + this.game.physics.arcade.angleToXY(this.game.world, x, y);
+        this.updateBarrierRotation(angle, -x, -y);
+    }
+
+    updateMouseControls() {
         const x = this.game.input.mousePointer.x;
         const y = this.game.input.mousePointer.y;
-        this.actors.barrier.rotation = Math.PI/2 + this.game.physics.arcade.angleToXY(this.actors.earth, x, y);
+        const angle = Math.PI/2 + this.game.physics.arcade.angleToXY(this.actors.earth, x, y);
+        this.updateBarrierRotation(angle, x - this.actors.barrier.position.x, y - this.actors.barrier.position.y);
     }
 
     updateCelestials() {
@@ -574,7 +621,7 @@ class PlayState extends Phaser.State {
         // asteroid is touching
 
         const celPoint = celestial.position.clone().subtract(this.game.world.centerX, this.game.world.centerY).normalize();
-        const barPoint = this.game.input.mousePointer.position.clone().subtract(this.game.world.centerX, this.game.world.centerY).normalize();
+        const barPoint = barrier.data.direction;
 
         const distance = barPoint.distance(celPoint);
 
@@ -818,7 +865,6 @@ class PlayState extends Phaser.State {
     }
 
     blowUpEarth() {
-        this.actors.barrier.destroy();
         this.sounds.PlayMusic.fadeOut(300);
         this.sounds.DefeatMusic.fadeIn(300);
         this.sounds.CometHit.play();
@@ -892,6 +938,8 @@ class PlayState extends Phaser.State {
         destroyTween.onComplete.add(() => burstEmitter.destroy(), this);
 
         this.actors.earth.body.setCircle(0);
+        this.actors.barrier.body.setCircle(0);
+        this.actors.barrier.visible = false;
 
         const quant2 = 16*16;
         // second boom
