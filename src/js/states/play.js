@@ -102,7 +102,7 @@ class PlayState extends Phaser.State {
     }
 
     shutdown() {
-        _.forEach(this.sounds, sound => sound.stop());
+        // _.forEach(this.sounds, sound => sound.stop());
     }
 
     /* create functions */
@@ -808,7 +808,7 @@ class PlayState extends Phaser.State {
 
         if (this.stats.earthHP === 0 && !this.actors.earth.data.exploding) {
             this.actors.earth.data.exploding = true;
-            this.game.time.events.add(1000, this.blowUpEarth, this);
+            this.game.time.events.add(300, this.blowUpEarth, this);
         }
     }
 
@@ -820,7 +820,7 @@ class PlayState extends Phaser.State {
     blowUpEarth() {
         this.actors.barrier.destroy();
         this.sounds.PlayMusic.fadeOut(300);
-        this.sounds.DefeatMusic.fadeIn(300);
+        this.sounds.DefeatMusic.fadeIn(300, true);
         this.sounds.CometHit.play();
         this.sounds.Siren.fadeOut(200);
 
@@ -937,7 +937,7 @@ class PlayState extends Phaser.State {
     }
 
     next() {
-        this.game.stateTransition.to('ScoreState', false, false, { stats: this.stats });
+        this.game.stateTransition.to('ScoreState', false, false, { stats: this.stats, music: this.sounds.DefeatMusic });
     }
 
     getRandomOffscreenPoint() {

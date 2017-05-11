@@ -1,7 +1,8 @@
 class ScoreState extends Phaser.State {
 
-    init({ stats }) {
+    init({ stats, music }) {
         this.stats = stats;
+        this.previousMusic = music;
     }
     create() {
         console.log('[score] showing score menu');
@@ -9,7 +10,6 @@ class ScoreState extends Phaser.State {
         window.menu = this;
 
         this.music = this.game.add.audio('VictoryMusic', 0.7, true);
-        this.music.play();
 
         const bg = this.game.add.sprite(0, 0, 'background');
         bg.tint = 0x3f3f3f;
@@ -40,6 +40,8 @@ class ScoreState extends Phaser.State {
             ];
         }
         else if (this.stats.transportsLaunched >= 25) {
+            this.previousMusic.fadeOut(100);
+            this.music.fadeIn(100, true);
             this.story = [
                 `WOW, you saved`,
                 `${this.stats.transportsLaunched*1000}`,
@@ -47,6 +49,9 @@ class ScoreState extends Phaser.State {
             ];
         }
         else {
+            this.music.play();
+            this.previousMusic.fadeOut(100);
+            this.music.fadeIn(100, true);
             this.story = [
                 `Well done, you saved`,
                 `${this.stats.transportsLaunched*1000}`,
