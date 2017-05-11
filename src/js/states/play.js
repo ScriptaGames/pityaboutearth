@@ -459,7 +459,13 @@ class PlayState extends Phaser.State {
     updateTouchControls() {
         const {x, y} = this.touchControl.speed;
         const angle = -Math.PI/2 + this.game.physics.arcade.angleToXY(this.game.world, x, y);
-        this.updateBarrierRotation(angle, -x, -y);
+        // only update the barrier position if the virtual joystick is being
+        // held.  if x and y are both 0, it means the player released the
+        // joystick, and in that case we should leave the barrier wherever it
+        // is instead of snapping to 0,0.
+        if (x !== 0 && y !== 0) {
+            this.updateBarrierRotation(angle, -x, -y);
+        }
     }
 
     updateMouseControls() {
