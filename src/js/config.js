@@ -7,7 +7,7 @@ const config = Object.freeze({
     DIFFICULTY_INCREASE_RATE: 0.015, // How much to increase the difficulty per second
 
     // canvas resolution
-    CANVAS_WIDTH: 1180,
+    CANVAS_WIDTH: 1920,
     CANVAS_HEIGHT: 1920,
 
     // for attacking, how long to press before asteroid turns into comet

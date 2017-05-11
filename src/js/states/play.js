@@ -429,7 +429,8 @@ class PlayState extends Phaser.State {
 
     updateCelestial(cel) {
         if (!cel.data.isBarrage) {
-            this.game.physics.arcade.accelerateToObject(cel, this.actors.earth);
+            // accelerate single asteroids toward earth
+            // this.game.physics.arcade.accelerateToObject(cel, this.actors.earth);
         }
     }
 
