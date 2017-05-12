@@ -77,8 +77,8 @@ class PlayState extends Phaser.State {
         });
 
         this.game.time.events.add(10300, () => {
-            this.game.time.events.loop(3000, this.createAsteroid, this);
-            this.game.time.events.loop(6000, this.createComet, this);
+            this.game.time.events.loop(6000, this.createAsteroid, this);
+            this.game.time.events.loop(9000, this.createComet, this);
             this.game.time.events.loop(1000, () => this.stats.difficulty += config.DIFFICULTY_INCREASE_RATE, this); // Increase the difficulty
             this.game.time.events.add(config.MAX_TIME_BETWEEN_BARRAGE, this.fireBarrage.bind(this), this);
         }, this);
@@ -229,19 +229,25 @@ class PlayState extends Phaser.State {
     createCelestial(type) {
         let frameRange;
         let group;
+        let speed;
         switch (type.toLowerCase()) {
             case 'asteroid':
                 frameRange = 4;
                 group = this.actors.asteroids;
+                speed = config.ASTEROID_SPEED + this.between(-config.ASTEROID_SPEED_SPREAD, config.ASTEROID_SPEED_SPREAD);
                 break;
             case 'comet':
                 frameRange = 2;
                 group = this.actors.comets;
+                speed = config.COMET_SPEED + this.between(-config.COMET_SPEED_SPREAD, config.COMET_SPEED_SPREAD);
                 break;
             default:
                 frameRange = 4;
                 group = this.actors.asteroids;
         }
+
+        // increase speed with difficulty, but only on a log scale
+        speed *= Math.log(this.stats.difficulty + 1) + 1;
 
         let point = this.getRandomOffscreenPoint();
         const celestial = this.game.add.sprite(point.x, point.y, type + '-sheet', Math.floor(Math.random()*frameRange));
@@ -250,7 +256,12 @@ class PlayState extends Phaser.State {
 
         this.game.physics.arcade.enableBody(celestial);
         celestial.body.setCircle(celestial.width / 2);
-        celestial.body.velocity.set(Math.random() * 40, Math.random() * 40);
+
+        // send the asteroid toward earth
+        Phaser.Point.subtract(this.actors.earth.position, celestial.position, celestial.body.velocity);
+        celestial.body.velocity.normalize().setMagnitude(speed);
+
+        // make it spin, so gently
         celestial.body.angularVelocity = 2*(12 * Math.random() - 6);
 
         group.add(celestial);

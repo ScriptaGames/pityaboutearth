@@ -28,6 +28,16 @@ const config = Object.freeze({
     // how wide is the barrier (in degrees)
     BARRIER_WIDTH: 0.65,
 
+    // base speed of asteroids
+    ASTEROID_SPEED: 30,
+    // random spread of asteroid speed, +/-
+    ASTEROID_SPEED_SPREAD: 4,
+
+    // base speed of comet
+    COMET_SPEED: 15,
+    // random spread of comet speed, +/-
+    COMET_SPEED_SPREAD: 8,
+
     // initial velocity of barrage
     BARRAGE_SPEED: 1200,
     BARRAGE_MAX_MULTIPLIER: 2000,
