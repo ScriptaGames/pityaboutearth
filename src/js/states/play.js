@@ -17,7 +17,7 @@ class PlayState extends Phaser.State {
         this.transportSpawnPoints = this.generateCirclePoints(20, 100);
 
         // Generate the points that column barrages will come from
-        this.columnBarrageSpawnPoints = this.generateCirclePoints();
+        this.columnBarrageSpawnPoints = this.generateCirclePoints(36, config.CANVAS_HYPOT/2);
 
         this.playMusic();
 
@@ -258,7 +258,7 @@ class PlayState extends Phaser.State {
         return celestial;
     }
 
-    createZigZagBarrage(count=6, radius=1000, width=90, offset=0, reverse=false, difficulty=0.5, createCelestialCallback=this.createAsteroid.bind(this), zagCount=3) {
+    createZigZagBarrage(count=6, radius=config.CANVAS_HYPOT/2, width=90, offset=0, reverse=false, difficulty=0.5, createCelestialCallback=this.createAsteroid.bind(this), zagCount=3) {
         if (zagCount == 0) return;
         let delayOffset = 0;
 
@@ -270,7 +270,7 @@ class PlayState extends Phaser.State {
         return delayOffset;
     }
 
-    createSpiralBarrage(count=30, radius=1000, width=360, offset=0, reverse=false, difficulty=0.5, createCelestialCallback=this.createAsteroid.bind(this), delayOffset=0) {
+    createSpiralBarrage(count=30, radius=config.CANVAS_HYPOT/2, width=360, offset=0, reverse=false, difficulty=0.5, createCelestialCallback=this.createAsteroid.bind(this), delayOffset=0) {
         if (difficulty == 0) difficulty = 0.01;  // avoid divide by 0
         if (count == 0) return;
         if (width > 360) width = 360;
@@ -663,7 +663,7 @@ class PlayState extends Phaser.State {
                 width = this.between(60, 180);
             }
 
-            barrageDuration = barrageFunc.bind(this)(count, 1000, width, offset, reverse, this.stats.difficulty, createCallback);
+            barrageDuration = barrageFunc.bind(this)(count, config.CANVAS_HYPOT/2, width, offset, reverse, this.stats.difficulty, createCallback);
         }
 
         // First schedule next barrage

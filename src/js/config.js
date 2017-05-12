@@ -9,6 +9,7 @@ const config = Object.freeze({
     // canvas resolution
     CANVAS_WIDTH: 1920,
     CANVAS_HEIGHT: 1920,
+    CANVAS_HYPOT: Math.sqrt(1920*1920 * 2),
 
     // for attacking, how long to press before asteroid turns into comet
     COMET_PRESS_DELAY: 0.4 * Phaser.Timer.SECOND,
