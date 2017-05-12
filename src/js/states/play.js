@@ -45,9 +45,11 @@ class PlayState extends Phaser.State {
                     true
                 );
         });
-        // Create single asteroid to start the game
+        // Create single asteroid to start the game ("The Big One")
         this.game.time.events.add(1400, () => {
-            this.createAsteroid();
+            const ast = this.createAsteroid();
+            ast.position.set(this.game.world.centerX, -200);
+            ast.body.velocity.set(0, 200);
         });
         this.game.time.events.add(8600, () => {
             const dots = this.game.add.sprite(this.game.world.centerX, this.game.world.height - 400, 'dots');
