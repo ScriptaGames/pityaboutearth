@@ -4,7 +4,7 @@ class PreloadState extends Phaser.State {
 
         // loading bar
 
-        this.loadingBar = this.game.add.sprite(300, this.game.world.centerY, 'loading-bar');
+        this.loadingBar = this.game.add.sprite(config.CANVAS_WIDTH/2 - 300, this.game.world.centerY, 'loading-bar');
         this.load.setPreloadSprite(this.loadingBar);
         this.loadingBar.anchor.set(0, 0.5);
 

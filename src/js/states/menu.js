@@ -136,7 +136,7 @@ class MenuState extends Phaser.State {
         text.scale.set(0.5,0.5);
         font.text = '';
         // text.tint = 0x51B5E0;
-        text.position.x = 60;
+        text.position.x = this.game.world.centerX - 490;;
         text.position.y = index * this.lineHeight + 600;
         let i = 0;
 

@@ -41,15 +41,13 @@ class ScoreState extends Phaser.State {
         }
         else if (this.stats.transportsLaunched >= 25) {
             this.story = [
-                `WOW, you saved`,
-                `${this.stats.transportsLaunched*1000}`,
+                `WOW, you saved ${this.stats.transportsLaunched*1000}`,
                 `people!!!  Humanity survives!`,
             ];
         }
         else {
             this.story = [
-                `Well done, you saved`,
-                `${this.stats.transportsLaunched*1000}`,
+                `Well done, you saved ${this.stats.transportsLaunched*1000}`,
                 `people.  Humanity is probably`,
                 `still doomed, but will have`,
                 `a good time with the`,
@@ -128,7 +126,7 @@ class ScoreState extends Phaser.State {
         text.scale.set(0.5,0.5);
         font.text = '';
         // text.tint = 0x51B5E0;
-        text.position.x = 60;
+        text.position.x = this.game.world.centerX - 490;;
         text.position.y = index * this.lineHeight + 636;
         let i = 0;
 
