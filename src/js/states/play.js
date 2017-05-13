@@ -8,6 +8,7 @@ class PlayState extends Phaser.State {
 
         this.createBackground();
         this.createSounds();
+        this.playMusic();
         this.createStats();
 
         this.createActors();
@@ -18,8 +19,6 @@ class PlayState extends Phaser.State {
 
         // Generate the points that column barrages will come from
         this.columnBarrageSpawnPoints = this.generateCirclePoints(36, config.CANVAS_HYPOT/2);
-
-        this.playMusic();
 
         this.timeToNextBarrage = config.MAX_TIME_BETWEEN_BARRAGE;
 
@@ -596,7 +595,7 @@ class PlayState extends Phaser.State {
     }
 
     playMusic() {
-        this.sounds.PlayMusic.fadeIn(300, true);
+        this.game.time.events.add(200, () => this.sounds.PlayMusic.fadeIn(500, true));
     }
 
     launchTransport() {
