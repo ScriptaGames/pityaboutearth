@@ -1,7 +1,8 @@
 class ScoreState extends Phaser.State {
 
-    init({ stats }) {
+    init({ stats, music }) {
         this.stats = stats;
+        this.previousMusic = music;
     }
     create() {
         console.log('[score] showing score menu');
@@ -9,7 +10,6 @@ class ScoreState extends Phaser.State {
         window.menu = this;
 
         this.music = this.game.add.audio('VictoryMusic', 0.7, true);
-        this.music.play();
 
         const bg = this.game.add.sprite(0, 0, 'background');
         bg.tint = 0x3f3f3f;
@@ -53,12 +53,17 @@ class ScoreState extends Phaser.State {
             ];
         }
         else if (this.stats.transportsLaunched >= 35) {
+            this.previousMusic.fadeOut(100);
+            this.music.fadeIn(100, true);
             this.story = [
                 `WOW, you saved ${score}`,
                 `people!!!  Humanity survives!`,
             ];
         }
         else {
+            this.music.play();
+            this.previousMusic.fadeOut(100);
+            this.music.fadeIn(100, true);
             this.story = [
                 `Well done, you saved ${score}`,
                 `people.  Humanity is probably`,
@@ -139,7 +144,7 @@ class ScoreState extends Phaser.State {
         text.scale.set(0.5,0.5);
         font.text = '';
         // text.tint = 0x51B5E0;
-        text.position.x = this.game.world.centerX - 490;;
+        text.position.x = this.game.world.centerX - 490;
         text.position.y = index * this.lineHeight + 636;
         let i = 0;
 
