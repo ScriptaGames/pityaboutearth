@@ -16,6 +16,8 @@ class Game extends Phaser.Game {
         this.state.add('PlayState'      , PlayState      , false);
         this.state.add('ScoreState'     , ScoreState     , false);
 
+        this.forceSingleUpdate = false; // decouple physics from framerate
+
         this.state.start('BootState');
     }
 }
