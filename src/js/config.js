@@ -10,14 +10,20 @@ const config = Object.freeze({
     DIFFICULTY_INCREASE_RATE: 0.015, // How much to increase the difficulty per second
 
     // canvas resolution
-    CANVAS_WIDTH: 1920,
+    CANVAS_WIDTH: isMobile.any ? 1180 : 1920,
     CANVAS_HEIGHT: 1920,
     CANVAS_HYPOT: Math.sqrt(1920*1920 * 2),
+
+    // are missiles enabled?
+    MISSILES_ENABLED: !isMobile.any,
+
+    // enable stray asteroids and comets
+    STRAYS_ENABLED: !isMobile.any,
 
     // Game pacing rates
     RATE_CREATE_ASTEROID: 7000,
     RATE_CREATE_COMET: 10000,
-    RATE_RAISE_DIFFICULTY: 1000,
+    RATE_RAISE_DIFFICULTY: isMobile.any ? 500 : 1000,
     RATE_LAUNCH_TRANSPORT: 5000,
 
     // for attacking, how long to press before asteroid turns into comet
