@@ -11,6 +11,12 @@ const config = Object.freeze({
     CANVAS_HEIGHT: 1920,
     CANVAS_HYPOT: Math.sqrt(1920*1920 * 2),
 
+    // Game pacing rates
+    RATE_CREATE_ASTEROID: 8000,
+    RATE_CREATE_COMET: 11000,
+    RATE_RAISE_DIFFICULTY: 1000,
+    RATE_LAUNCH_TRANSPORT: 5000,
+
     // for attacking, how long to press before asteroid turns into comet
     COMET_PRESS_DELAY: 0.4 * Phaser.Timer.SECOND,
 
@@ -54,7 +60,7 @@ const config = Object.freeze({
     MIN_TIME_BETWEEN_BARRAGE: 1000,
 
     // what is the chance of getting a comet barrage
-    PERCENT_CHANCE_OF_COMET_BARRAGE: 15,
+    PERCENT_CHANCE_OF_COMET_BARRAGE: 10,
 
     // how long to start the barrage Siren sound before the barrage is spawned
     BARRANGE_WARNING_TIME: 2.8 * Phaser.Timer.SECOND,

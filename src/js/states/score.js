@@ -27,7 +27,7 @@ class ScoreState extends Phaser.State {
                 `people?  You monster.`,
             ];
         }
-        else if (this.stats.transportsLaunched < 10) {
+        else if (this.stats.transportsLaunched < 15) {
             this.story = [
                 `You saved ${this.stats.transportsLaunched*1000}`,
                 `people... that's not nearly`,
@@ -39,7 +39,7 @@ class ScoreState extends Phaser.State {
                 `"Job well done!" -- Universe`,
             ];
         }
-        else if (this.stats.transportsLaunched >= 25) {
+        else if (this.stats.transportsLaunched >= 35) {
             this.story = [
                 `WOW, you saved ${this.stats.transportsLaunched*1000}`,
                 `people!!!  Humanity survives!`,

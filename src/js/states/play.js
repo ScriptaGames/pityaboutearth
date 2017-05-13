@@ -51,7 +51,7 @@ class PlayState extends Phaser.State {
             ast.position.set(this.game.world.centerX, -200);
             ast.body.velocity.set(0, 200);
         });
-        this.game.time.events.add(8600, () => {
+        this.game.time.events.add(8000, () => {
             const dots = this.game.add.sprite(this.game.world.centerX, this.game.world.height - 400, 'dots');
             dots.anchor.set(0.5, 1);
             dots.alpha = 0;
@@ -63,7 +63,7 @@ class PlayState extends Phaser.State {
                     true, 0, 0, true
                 );
         });
-        this.game.time.events.add(11600, () => {
+        this.game.time.events.add(11000, () => {
             const uhoh = this.game.add.sprite(this.game.world.centerX, this.game.world.height - 400, 'uh-oh');
             uhoh.alpha = 0;
             uhoh.anchor.set(0.5, 1);
@@ -77,13 +77,13 @@ class PlayState extends Phaser.State {
         });
 
         this.game.time.events.add(10300, () => {
-            this.game.time.events.loop(6000, this.createAsteroid, this);
-            this.game.time.events.loop(9000, this.createComet, this);
-            this.game.time.events.loop(1000, () => this.stats.difficulty += config.DIFFICULTY_INCREASE_RATE, this); // Increase the difficulty
-            this.game.time.events.add(config.MAX_TIME_BETWEEN_BARRAGE, this.fireBarrage.bind(this), this);
+            this.game.time.events.loop(config.RATE_CREATE_ASTEROID, this.createAsteroid, this);
+            this.game.time.events.loop(config.RATE_CREATE_COMET, this.createComet, this);
+            this.game.time.events.loop(config.RATE_RAISE_DIFFICULTY, () => this.stats.difficulty += config.DIFFICULTY_INCREASE_RATE, this); // Increase the difficulty
+            this.game.time.events.add(2000, this.fireBarrage.bind(this), this);
         }, this);
         this.game.time.events.add(13300, () => {
-            this.game.time.events.loop(5000, this.launchTransport, this);
+            this.game.time.events.loop(config.RATE_LAUNCH_TRANSPORT, this.launchTransport, this);
         }, this);
 
     }
