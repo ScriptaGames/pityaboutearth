@@ -13,7 +13,10 @@ class PlayState extends Phaser.State {
         this.createControls();
 
         this.createActors();
-        this.createMissileLauncher();
+
+        if (config.MISSILES_ENABLED) {
+            this.createMissileLauncher();
+        }
 
         // Generate points that the transports will launch from
         this.transportSpawnPoints = this.generateCirclePoints(20, 100);
@@ -77,8 +80,10 @@ class PlayState extends Phaser.State {
         });
 
         this.game.time.events.add(10300, () => {
-            this.game.time.events.loop(config.RATE_CREATE_ASTEROID, this.createAsteroid, this);
-            this.game.time.events.loop(config.RATE_CREATE_COMET, this.createComet, this);
+            if (config.STRAYS_ENABLED) {
+                this.game.time.events.loop(config.RATE_CREATE_ASTEROID, this.createAsteroid, this);
+                this.game.time.events.loop(config.RATE_CREATE_COMET, this.createComet, this);
+            }
             this.game.time.events.loop(config.RATE_RAISE_DIFFICULTY, () => this.stats.difficulty += config.DIFFICULTY_INCREASE_RATE, this); // Increase the difficulty
             this.game.time.events.add(2000, this.fireBarrage.bind(this), this);
         }, this);
