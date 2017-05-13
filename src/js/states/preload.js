@@ -21,6 +21,9 @@ class PreloadState extends Phaser.State {
         this.game.load.image('dots', 'images/big/dotdotdot.png');
         this.game.load.image('uh-oh', 'images/big/uh-oh.png');
         this.game.load.image('person', 'images/big/person.png');
+        this.game.load.image('compass', 'images/big/touch-center.png');
+        this.game.load.image('touch_segment', 'images/big/touch-lead.png');
+        this.game.load.image('touch', 'images/big/touch-lead.png');
 
 
         // Sprite sheets
