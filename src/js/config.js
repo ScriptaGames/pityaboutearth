@@ -12,8 +12,8 @@ const config = Object.freeze({
     CANVAS_HYPOT: Math.sqrt(1920*1920 * 2),
 
     // Game pacing rates
-    RATE_CREATE_ASTEROID: 8000,
-    RATE_CREATE_COMET: 11000,
+    RATE_CREATE_ASTEROID: 7000,
+    RATE_CREATE_COMET: 10000,
     RATE_RAISE_DIFFICULTY: 1000,
     RATE_LAUNCH_TRANSPORT: 5000,
 

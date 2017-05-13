@@ -247,7 +247,7 @@ class PlayState extends Phaser.State {
         }
 
         // increase speed with difficulty, but only on a log scale
-        speed *= Math.log(this.stats.difficulty + 1) + 1;
+        speed *= Math.log(this.stats.difficulty + 1) + 0.75;
 
         let point = this.getRandomOffscreenPoint();
         const celestial = this.game.add.sprite(point.x, point.y, type + '-sheet', Math.floor(Math.random()*frameRange));
