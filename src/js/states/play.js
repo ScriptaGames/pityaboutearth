@@ -364,6 +364,20 @@ class PlayState extends Phaser.State {
         }, this);
     }
 
+    createTarget(x, y) {
+        const target = this.game.add.sprite(x, y, 'target-sheet');
+        target.anchor.set(0.5, 0.5);
+
+        const triAnim = target.animations.add('triangulate', [0,1,2,3,4,5,6], 26, false);
+        const lockAnim = target.animations.add('lock', [7,8], 18, true);
+
+        triAnim.onComplete.add(() => lockAnim.play(), this);
+
+        triAnim.play();
+
+        return target;
+    }
+
     createMissile() {
         const x = this.game.world.centerX + Math.random() * this.actors.earth.width/2 - this.actors.earth.width / 4;
         const y = this.game.world.centerY + Math.random() * this.actors.earth.height/2 - this.actors.earth.height / 4;
@@ -686,9 +700,12 @@ class PlayState extends Phaser.State {
 
     fireMissile({ position }) {
         if (this.isAlive()) {
+            const { x, y } = position;
+
+            const target = this.createTarget(x, y);
             const missile = this.createMissile();
             missile.scale.set(0, 0);
-            const { x, y } = position;
+            missile.data.target = target;
 
             this.stats.missilesFired += 1;
 
@@ -721,6 +738,8 @@ class PlayState extends Phaser.State {
     }
 
     explodeMissile(missile) {
+        missile.data.target.destroy();
+
         const boom = this.createBoom();
         boom.position.copyFrom(missile.position);
         boom.scale.set(0, 0);
