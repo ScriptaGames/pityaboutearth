@@ -64,6 +64,7 @@ class MenuState extends Phaser.State {
         btnHum.anchor.set(0.5, 1);
         btnHum.onDownSound = this.game.add.audio('ButtonTap');
         btnHum.onOverSound = this.game.add.audio('Barrier');
+        btnHum.input.useHandCursor = false;
 
         if (config.SKIP_MENU) {
             this.next();
