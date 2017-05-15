@@ -13,6 +13,7 @@ class PlayState extends Phaser.State {
         this.createControls();
 
         this.createActors();
+        this.updateBarrierRotation(0, 0, -1);
 
         if (config.MISSILES_ENABLED) {
             this.createMissileLauncher();
