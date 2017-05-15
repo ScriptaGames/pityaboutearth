@@ -460,6 +460,39 @@ class PlayState extends Phaser.State {
         return barrier;
     }
 
+    createPerfectNote(x=this.game.world.centerX, y=this.game.world.centerY) {
+        const perf = this.game.add.sprite(x, y, 'perfect-sheet', 0);
+        perf.anchor.set(0.5, 0.5);
+        perf.alpha = 0;
+
+        const appearTween = this.game.add
+            .tween(perf)
+            .to(
+                {
+                    alpha: 1.0,
+                },
+                20,
+                Phaser.Easing.Linear.None,
+                true
+            );
+        appearTween.onComplete.add(() => shimmer.play(24), this);
+
+        const disappearTween = this.game.add
+            .tween(perf)
+            .to(
+                {
+                    alpha: 0.0,
+                },
+                60,
+                Phaser.Easing.Linear.None,
+                false
+            );
+        disappearTween.onComplete.add(() => perf.destroy(), this);
+
+        const shimmer = perf.animations.add('shimmer');
+        shimmer.onComplete.add(() => disappearTween.start(), this);
+    }
+
     /* update functions */
 
     updateCollisions() {

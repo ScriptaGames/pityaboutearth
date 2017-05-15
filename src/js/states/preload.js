@@ -42,7 +42,7 @@ class PreloadState extends Phaser.State {
         this.game.load.spritesheet('missile-sheet', 'images/big/missile.png', 3*10, 14*10);
         this.game.load.spritesheet('btn-play', 'images/big/button-play.png', 64*10, 24*10);
         this.game.load.spritesheet('target-sheet', 'images/big/target-sheet.png', 15*10, 15*10);
-        // this.game.load.spritesheet('sheet', 'images/sheet.png', 44, 44, 30);
+        this.game.load.spritesheet('perfect-sheet', 'images/big/perfect-sheet.png', 29*10, 7*10);
 
         this.game.load.image('gelatin-font', 'images/big/gelatin-font.png');
 
