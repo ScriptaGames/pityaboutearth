@@ -499,19 +499,20 @@ class PlayState extends Phaser.State {
     createPerfectNote(x=this.game.world.centerX, y=this.game.world.centerY) {
         const perf = this.game.add.sprite(x, y, 'perfect-sheet', 0);
         perf.anchor.set(0.5, 0.5);
-        perf.alpha = 0;
+        perf.scale.set(0, 0);
 
         const appearTween = this.game.add
-            .tween(perf)
-            .to(
-                {
-                    alpha: 1.0,
-                },
-                20,
+            .tween(perf.scale)
+            .to({x: 1.2, y: 1.2},
+                400,
                 Phaser.Easing.Linear.None,
                 true
             );
-        appearTween.onComplete.add(() => shimmer.play(24), this);
+
+        appearTween.onComplete.add(() => shimmer.play(24, true), this);
+        this.game.time.events.add(1500, () => {
+            shimmer.stop(true, true);
+        }, this);
 
         const disappearTween = this.game.add
             .tween(perf)
@@ -519,7 +520,7 @@ class PlayState extends Phaser.State {
                 {
                     alpha: 0.0,
                 },
-                60,
+                100,
                 Phaser.Easing.Linear.None,
                 false
             );
@@ -773,7 +774,7 @@ class PlayState extends Phaser.State {
 
             this.sounds.Rocket2.play();
 
-            const enlarge = this.game.add
+            this.game.add
                 .tween(transport.scale)
                 .to({x: 1, y: 1},
                     1000,
