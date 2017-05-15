@@ -4,6 +4,7 @@ class Barrage {
     }
 
     init() {
+        this.type = '';
         this.isPerfect = true;
     }
 
