@@ -303,26 +303,19 @@ class PlayState extends Phaser.State {
         return celestial;
     }
 
-    createZigZagBarrage(count=6, radius=config.CANVAS_HYPOT/2, width=90, offset=0, reverse=false, difficulty=0.5, createCelestialCallback=this.createAsteroid.bind(this), zagCount=3) {
+    createZigZagBarrage(count=6, radius=config.CANVAS_HYPOT/2, width=90, offset=0, reverse=false, createCelestialCallback=this.createAsteroid.bind(this), zagCount=3) {
         if (zagCount == 0) return;
         let delayOffset = 0;
-        let final = false;
 
         for (let i = 0; i < zagCount; i++) {
-            // see if this is the last segment of the barrage
-            if (i + 1 === zagCount) {
-                final = true; // this is the last segment of this zigzag barrage
-            }
-
-            delayOffset = this.createSpiralBarrage(count, radius, width, offset, reverse, difficulty, createCelestialCallback, delayOffset, final);
+            delayOffset = this.createSpiralBarrage(count, radius, width, offset, reverse, createCelestialCallback, delayOffset);
             reverse = !reverse;
         }
 
         return delayOffset;
     }
 
-    createSpiralBarrage(count=30, radius=config.CANVAS_HYPOT/2, width=360, offset=0, reverse=false, difficulty=0.5, createCelestialCallback=this.createAsteroid.bind(this), delayOffset=0, final=true) {
-        if (difficulty === 0) difficulty = 0.01;  // avoid divide by 0
+    createSpiralBarrage(count=30, radius=config.CANVAS_HYPOT/2, width=360, offset=0, reverse=false, createCelestialCallback=this.createAsteroid.bind(this), delayOffset=0) {
         if (count === 0) return;
         if (width > 360) width = 360;
         if (width <= 0) return;
@@ -335,39 +328,28 @@ class PlayState extends Phaser.State {
         // spawn asteroids in a spiral pattern
         if (!reverse) {
             for (let i = offset; i < width + offset; i += angle) {
-                delay += Math.max(config.BARRAGE_SINGLE_CEL_HARD_DELAY / difficulty, config.BARRAGE_SINGLE_CEL_MIN_DELAY);
+                delay += Math.max(config.BARRAGE_SINGLE_CEL_HARD_DELAY / this.stats.difficulty, config.BARRAGE_SINGLE_CEL_MIN_DELAY);
 
-                // see if this is the last celest in this barrage
-                if (final && (i + angle >= width + offset)) {
-                    console.log("[play] create last celest in spiral barrage");
-                    last = true;
-                }
-
-                this.createBarrageCelestial(i, radius, delay, difficulty, createCelestialCallback, last);
+                this.createSpiralBarrageCelestial(i, radius, delay, createCelestialCallback);
             }
         }
         else {
             for (let i = width + offset; i > offset; i -= angle) {
-                delay += Math.max(config.BARRAGE_SINGLE_CEL_HARD_DELAY / difficulty, config.BARRAGE_SINGLE_CEL_MIN_DELAY);
+                delay += Math.max(config.BARRAGE_SINGLE_CEL_HARD_DELAY / this.stats.difficulty, config.BARRAGE_SINGLE_CEL_MIN_DELAY);
 
-
-                // see if this is the last celest in this barrage
-                if (final && (i - angle <= offset)) {
-                    console.log("[play] create last celest in reverse spiral barrage");
-                    last = true;
-                }
-
-                this.createBarrageCelestial(i, radius, delay, difficulty, createCelestialCallback, last);
+                this.createSpiralBarrageCelestial(i, radius, delay, createCelestialCallback);
             }
         }
 
         return delay;
     }
 
-    createColumnBarrage(numColumns=4, celestPerColumn=4, difficulty=0.2, createCelestialCallback=this.createAsteroid.bind(this)) {
+    createColumnBarrage(numColumns=4, celestPerColumn=4, createCelestialCallback=this.createAsteroid.bind(this)) {
         // Get random off screen points for num of columns
         let points = [];
         let delay = 0;
+
+        let difficulty = this.stats.difficulty;
 
         for (let i = 0; i < numColumns; i++) {
             let spawnPoint = this.columnBarrageSpawnPoints[this.between(0, this.columnBarrageSpawnPoints.length - 1)];
@@ -379,27 +361,7 @@ class PlayState extends Phaser.State {
 
             for (let j = 0; j < celestPerColumn; j++) {
                 this.game.time.events.add(delay, () => {
-                    let celest = createCelestialCallback();
-                    celest.position.x = point.x;
-                    celest.position.y = point.y;
-                    celest.data.isBarrage = true;
-
-                    // See if this is the last celestial in the barrage
-                    if (i+1 == points.length && j+1 == celestPerColumn) {
-                        console.log("[play] create last column barrage celestial");
-                        celest.data.isLast = true;
-                    }
-
-                    // TODO: see if we can make this in terms of createBarrageCelestial() function call, avoid duplication
-
-                    // set initial velocity
-                    let v = Phaser.Point.subtract(this.actors.earth.position, celest.position);
-
-                    v.normalize();
-                    let multiplier = Math.min(config.BARRAGE_SPEED * difficulty, config.BARRAGE_MAX_MULTIPLIER);
-                    v.multiply(multiplier, multiplier);
-
-                    celest.body.velocity.set(v.x, v.y);
+                    this.createBarrageCelestial(point.x, point.y, createCelestialCallback);
                 }, this);
                 delay += Math.max(config.BARRAGE_SINGLE_CEL_HARD_DELAY / difficulty, config.BARRAGE_SINGLE_CEL_MIN_DELAY);
             }
@@ -409,27 +371,33 @@ class PlayState extends Phaser.State {
         return delay;
     }
 
-    createBarrageCelestial(degree, radius, delay, difficulty, createCelestialCallback, last) {
+    createSpiralBarrageCelestial(degree, radius, delay, createCelestialCallback) {
         let x = this.game.world.centerX + radius * Math.cos(this.game.math.degToRad(degree));
         let y = this.game.world.centerY + radius * Math.sin(this.game.math.degToRad(degree));
 
         this.game.time.events.add(delay, () => {
-            let celest = createCelestialCallback();
-            celest.position.x = x;
-            celest.position.y = y;
-            celest.data.isBarrage = true;
-
-            celest.data.isLast = last;
-
-            // set initial velocity
-            let v = Phaser.Point.subtract(this.actors.earth.position, celest.position);
-
-            v.normalize();
-            let multiplier = Math.min(config.BARRAGE_SPEED * difficulty, config.BARRAGE_MAX_MULTIPLIER);
-            v.multiply(multiplier, multiplier);
-
-            celest.body.velocity.set(v.x, v.y);
+            this.createBarrageCelestial(x, y, createCelestialCallback)
         }, this);
+    }
+
+    createBarrageCelestial(x, y, createCelestialCallback) {
+        let celest = createCelestialCallback();
+        celest.position.x = x;
+        celest.position.y = y;
+        celest.data.isBarrage = true;
+
+        this.barrage.celestials.push(celest);  // track perfect barrage block
+
+        // set initial velocity
+        let v = Phaser.Point.subtract(this.actors.earth.position, celest.position);
+
+        v.normalize();
+        let multiplier = Math.min(config.BARRAGE_SPEED * this.stats.difficulty, config.BARRAGE_MAX_MULTIPLIER);
+        v.multiply(multiplier, multiplier);
+
+        celest.body.velocity.set(v.x, v.y);
+
+        return celest;
     }
 
     createTarget(x, y) {
@@ -737,15 +705,10 @@ class PlayState extends Phaser.State {
         destroyTween.onComplete.add(() => cel.destroy(), this);
 
         // check for perfect barrage block
-        if (cel.data.isLast && !cel.data.beingDestroyed) {
-            console.log("[play] deflected last barrage celest, type: ", this.barrage.type);
-
-            if (this.barrage.isPerfect) {
-                console.log("[play] PERFECT Barrage block! type: ", this.barrage.type);
-                this.createPerfectNote(cel.position.x, cel.position.y);
-                this.launchTransport();
-            }
-
+        if (!cel.data.beingDestroyed && this.barrage.isCompletedPerfectly()) {
+            console.log("[play] PERFECT Barrage block! type: ", this.barrage.type);
+            this.createPerfectNote(cel.position.x, cel.position.y);
+            this.launchTransport();
         }
 
         cel.data.beingDestroyed = true;
@@ -834,7 +797,7 @@ class PlayState extends Phaser.State {
         if (barrageFunc.name === 'createColumnBarrage') {
             let columnCount = this.between(2, 6);
             let celestPerColumn = this.between(3, 10);
-            barrageDuration = barrageFunc.bind(this)(columnCount, celestPerColumn, this.stats.difficulty, createCallback);
+            barrageDuration = barrageFunc.bind(this)(columnCount, celestPerColumn, createCallback);
         }
         else {
             let count = this.between(10, 30);
@@ -847,7 +810,7 @@ class PlayState extends Phaser.State {
                 width = this.between(60, 180);
             }
 
-            barrageDuration = barrageFunc.bind(this)(count, config.CANVAS_HYPOT/2, width, offset, reverse, this.stats.difficulty, createCallback);
+            barrageDuration = barrageFunc.bind(this)(count, config.CANVAS_HYPOT/2, width, offset, reverse, createCallback);
         }
 
         // First schedule next barrage
