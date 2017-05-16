@@ -85,8 +85,8 @@ class PlayState extends Phaser.State {
 
         this.game.time.events.add(10300, () => {
             if (config.STRAYS_ENABLED) {
-                this.game.time.events.loop(config.RATE_CREATE_ASTEROID, this.createAsteroid, this);
-                this.game.time.events.loop(config.RATE_CREATE_COMET, this.createComet, this);
+                this.game.time.events.add(Math.pow(this.stats.difficulty, 2) + config.RATE_CREATE_ASTEROID, this.singleAsteroidLoop, this);
+                this.game.time.events.add(Math.pow(this.stats.difficulty, 2) + config.RATE_CREATE_COMET, this.singleCometLoop, this);
             }
             this.game.time.events.loop(config.RATE_RAISE_DIFFICULTY, () => this.stats.difficulty += config.DIFFICULTY_INCREASE_RATE, this); // Increase the difficulty
             this.game.time.events.add(2000, this.fireBarrage.bind(this), this);
@@ -776,6 +776,24 @@ class PlayState extends Phaser.State {
             transport.body.acceleration.set(transport.body.velocity.x * config.TRANSPORT_ACCELERATION,
                 transport.body.velocity.y * config.TRANSPORT_ACCELERATION);
         }
+    }
+
+    singleAsteroidLoop() {
+        let nextTime = this.getNextSpawnTime(config.RATE_CREATE_ASTEROID);
+        console.log('[play] Spawning next single asteroid. Next in: ', nextTime);
+        this.createAsteroid();
+        this.game.time.events.add(nextTime, this.singleAsteroidLoop, this);
+    }
+
+    singleCometLoop() {
+        let nextTime = this.getNextSpawnTime(config.RATE_CREATE_COMET);
+        console.log('[play] Spawning next single comet. Next in: ', nextTime);
+        this.createComet();
+        this.game.time.events.add(nextTime, this.singleCometLoop, this);
+    }
+
+    getNextSpawnTime(base) {
+        return ((Math.pow(this.stats.difficulty, 2) / 2) * 1000) + base;
     }
 
     fireBarrage() {
