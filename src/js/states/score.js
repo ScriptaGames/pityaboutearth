@@ -133,6 +133,7 @@ class ScoreState extends Phaser.State {
 
     shutdown() {
         this.music.stop();
+        this.previousMusic.stop();
     }
 
     getLine(index) {
