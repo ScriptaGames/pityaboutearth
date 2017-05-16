@@ -690,18 +690,6 @@ class PlayState extends Phaser.State {
             this.sounds.Barrier.play();
             this.stats.deflections += 1;
             this.destroyCelestial(cel);
-
-            // check for perfect barrage block
-            if (cel.data.isLast) {
-                console.log("[play] deflected last barrage celest, type: ", this.barrage.type);
-
-                if (cel.data.isLast && this.barrage.isPerfect) {
-                    console.log("[play] PERFECT Barrage block! type: ", this.barrage.type);
-                    this.createPerfectNote(cel.position.x, cel.position.y);
-                    this.launchTransport();
-                }
-
-            }
         }
         const bounceDir = Phaser.Point.subtract(cel.position, this.actors.earth.position);
         bounceDir.multiply(0.5, 0.5);
@@ -747,6 +735,20 @@ class PlayState extends Phaser.State {
                 );
         }
         destroyTween.onComplete.add(() => cel.destroy(), this);
+
+        // check for perfect barrage block
+        if (cel.data.isLast && !cel.data.beingDestroyed) {
+            console.log("[play] deflected last barrage celest, type: ", this.barrage.type);
+
+            if (this.barrage.isPerfect) {
+                console.log("[play] PERFECT Barrage block! type: ", this.barrage.type);
+                this.createPerfectNote(cel.position.x, cel.position.y);
+                this.launchTransport();
+            }
+
+        }
+
+        cel.data.beingDestroyed = true;
     }
 
     barrierOverlap(barrier, celestial) {
