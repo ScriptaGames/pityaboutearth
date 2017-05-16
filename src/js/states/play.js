@@ -705,7 +705,7 @@ class PlayState extends Phaser.State {
         destroyTween.onComplete.add(() => cel.destroy(), this);
 
         // check for perfect barrage block
-        if (!cel.data.beingDestroyed && this.barrage.isCompletedPerfectly()) {
+        if (!cel.data.beingDestroyed && cel.data.isBarrage && this.barrage.isCompletedPerfectly()) {
             console.log("[play] PERFECT Barrage block! type: ", this.barrage.type);
             this.createPerfectNote(cel.position.x, cel.position.y);
             this.launchTransport();
