@@ -40,7 +40,7 @@ class ScoreState extends Phaser.State {
                 `people?  You monster.`,
             ];
         }
-        else if (this.stats.transportsLaunched < 15) {
+        else if (this.stats.transportsLaunched < 20) {
             this.story = [
                 `You saved ${score}`,
                 `people... that's not nearly`,
@@ -52,7 +52,7 @@ class ScoreState extends Phaser.State {
                 `"Job well done!" -- Universe`,
             ];
         }
-        else if (this.stats.transportsLaunched >= 35) {
+        else if (this.stats.transportsLaunched >= 45) {
             this.previousMusic.fadeOut(100);
             this.music.fadeIn(100, true);
             this.story = [
