@@ -85,8 +85,8 @@ class PlayState extends Phaser.State {
 
         this.game.time.events.add(10300, () => {
             if (config.STRAYS_ENABLED) {
-                this.game.time.events.add(Math.pow(this.stats.difficulty, 2) + config.RATE_CREATE_ASTEROID, this.singleAsteroidLoop, this);
-                this.game.time.events.add(Math.pow(this.stats.difficulty, 2) + config.RATE_CREATE_COMET, this.singleCometLoop, this);
+                this.game.time.events.add(config.RATE_CREATE_ASTEROID, this.singleAsteroidLoop, this);
+                this.game.time.events.add(config.RATE_CREATE_COMET, this.singleCometLoop, this);
             }
             this.game.time.events.loop(config.RATE_RAISE_DIFFICULTY, () => this.stats.difficulty += config.DIFFICULTY_INCREASE_RATE, this); // Increase the difficulty
             this.game.time.events.add(2000, this.fireBarrage.bind(this), this);
