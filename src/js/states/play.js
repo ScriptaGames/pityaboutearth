@@ -471,31 +471,36 @@ class PlayState extends Phaser.State {
 
         const appearTween = this.game.add
             .tween(perf.scale)
-            .to({x: 1.2, y: 1.2},
+            .to({x: 0.75, y: 0.75},
                 250,
                 Phaser.Easing.Linear.None,
                 true
             );
 
         appearTween.onComplete.add(() => shimmer.play(24, true), this);
-        this.game.time.events.add(1500, () => {
+        this.game.time.events.add(1000, () => {
             shimmer.stop(true, true);
         }, this);
 
         const disappearTween = this.game.add
             .tween(perf)
-            .to(
-                {
-                    alpha: 0.0,
-                },
+            .to( { alpha: 0.0, },
+                100,
+                Phaser.Easing.Linear.None,
+                false
+            );
+        const disappearTween2 = this.game.add
+            .tween(perf.scale)
+            .to( { x: 1.1, y: 1.1},
                 100,
                 Phaser.Easing.Linear.None,
                 false
             );
         disappearTween.onComplete.add(() => perf.destroy(), this);
 
-        const shimmer = perf.animations.add('shimmer');
+        const shimmer = perf.animations.add('shimmer', [9,8,7,6,5,4,3,2,1,0,1,2,3,4,5,6,7,8,9]);
         shimmer.onComplete.add(() => disappearTween.start(), this);
+        shimmer.onComplete.add(() => disappearTween2.start(), this);
     }
 
     /* update functions */
