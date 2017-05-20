@@ -24,13 +24,13 @@ class PreloadState extends Phaser.State {
         this.game.load.image('compass', 'images/big/touch-center.png');
         this.game.load.image('touch_segment', 'images/big/touch-lead.png');
         this.game.load.image('touch', 'images/big/touch-lead.png');
+        this.game.load.image('earth-small', 'images/big/earth-small.png');
+        this.game.load.image('healthbar', 'images/big/healthbar.png');
 
 
         // Sprite sheets
 
         this.game.load.spritesheet('earth-sheet', 'images/big/earth.png', 32*10, 32*10);
-        this.game.load.spritesheet('earth-small', 'images/earth.png', 32, 32);
-        this.game.load.spritesheet('healthbar', 'images/big/healthbar.png', 40*10, 4*10);
         this.game.load.spritesheet('health-filling', 'images/big/health-filling.png', 38*10, 2*10);
         this.game.load.spritesheet('earth-boom-sheet', 'images/big/earth-boom-sheet.png', 10, 10);
         this.game.load.spritesheet('earth-boom2-sheet', 'images/big/missile-boom.png', 10, 10);

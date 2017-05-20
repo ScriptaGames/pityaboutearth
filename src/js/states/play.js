@@ -227,10 +227,10 @@ class PlayState extends Phaser.State {
 
     createEarthHealthBar() {
         console.log('[play] creating earth healthbar');
-        let earth = this.game.add.sprite(20, 20, 'earth-small', 0);
-        earth.scale.setTo(1.15, 1.15);
-        let healthbar = this.game.add.sprite(70, 20, 'healthbar', 0);
-        this.healthFilling = this.game.add.sprite(80, 30, 'health-filling', 0);
+        const earth = this.game.add.sprite(20, 20, 'earth-small');
+        earth.scale.setTo(0.5, 0.5);
+        const healthbar = this.game.add.sprite(70, 20, 'healthbar');
+        this.healthFilling = this.game.add.sprite(80, 30, 'health-filling');
     }
 
     createScoreBar() {
