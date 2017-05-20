@@ -1020,6 +1020,8 @@ class PlayState extends Phaser.State {
                 Phaser.Easing.Linear.None,
                 true
             );
+
+        fadeTween.onComplete.add(this.next, this);
         const scaleTween = this.game.add
             .tween(this.actors.earth.scale)
             .to(
@@ -1100,8 +1102,6 @@ class PlayState extends Phaser.State {
                 1200
             );
         burst2Tween.onComplete.add(() => secondBurstEmitter.destroy(), this);
-
-        this.game.time.events.add(5000, this.next, this);
 
         console.log('[play] KABOOOOOOM!');
     }
