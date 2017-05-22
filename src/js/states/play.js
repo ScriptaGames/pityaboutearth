@@ -266,12 +266,12 @@ class PlayState extends Phaser.State {
         let speed;
         switch (type.toLowerCase()) {
             case 'asteroid':
-                frameRange = 4;
+                frameRange = 5;
                 group = this.actors.asteroids;
                 speed = config.ASTEROID_SPEED + this.between(-config.ASTEROID_SPEED_SPREAD, config.ASTEROID_SPEED_SPREAD);
                 break;
             case 'comet':
-                frameRange = 2;
+                frameRange = 3;
                 group = this.actors.comets;
                 speed = config.COMET_SPEED + this.between(-config.COMET_SPEED_SPREAD, config.COMET_SPEED_SPREAD);
                 break;
