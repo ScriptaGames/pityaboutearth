@@ -471,7 +471,7 @@ class PlayState extends Phaser.State {
 
         const appearTween = this.game.add
             .tween(perf.scale)
-            .to({x: 0.75, y: 0.75},
+            .to({x: 0.8, y: 0.8},
                 250,
                 Phaser.Easing.Linear.None,
                 true
