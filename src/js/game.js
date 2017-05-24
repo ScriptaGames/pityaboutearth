@@ -10,11 +10,14 @@ class Game extends Phaser.Game {
             false
         );
 
-        this.state.add('BootState'      , BootState      , false);
-        this.state.add('PreloadState'   , PreloadState   , false);
-        this.state.add('MenuState'      , MenuState      , false);
-        this.state.add('PlayState'      , PlayState      , false);
-        this.state.add('ScoreState'     , ScoreState     , false);
+        this.state.add('BootState'         , BootState         , false);
+        this.state.add('PreloadState'      , PreloadState      , false);
+        this.state.add('MenuState'         , MenuState         , false);
+        this.state.add('PlayState'         , PlayState         , false);
+        this.state.add('PlayState'         , PlayState         , false);
+        this.state.add('PlaySurvivalState' , PlaySurvivalState , false);
+        this.state.add('PlayWavesState'    , PlayWavesState    , false);
+        this.state.add('ScoreState'        , ScoreState        , false);
 
         this.forceSingleUpdate = false; // decouple physics from framerate
 

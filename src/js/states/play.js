@@ -36,65 +36,7 @@ class PlayState extends Phaser.State {
             this.createColumnBarrage,
         ];
 
-        // here's the big one text!
-        this.game.time.events.add(800, () => {
-            const bigOne = this.game.add.sprite(this.game.world.centerX, this.game.world.height - 400, 'big-one');
-            bigOne.alpha = 0;
-            bigOne.anchor.set(0.5, 1);
-            this.game.add
-                .tween(bigOne)
-                .to( { alpha: 1.0, },
-                    1200,
-                    Phaser.Easing.Quadratic.In,
-                    true,
-                    0,
-                    0,
-                    true
-                );
-        });
-        // Create single asteroid to start the game ("The Big One")
-        this.game.time.events.add(1400, () => {
-            const ast = this.createAsteroid();
-            ast.position.set(this.game.world.centerX, -200);
-            ast.body.velocity.set(0, 200);
-        });
-        this.game.time.events.add(8000, () => {
-            const dots = this.game.add.sprite(this.game.world.centerX, this.game.world.height - 400, 'dots');
-            dots.anchor.set(0.5, 1);
-            dots.alpha = 0;
-            this.game.add
-                .tween(dots)
-                .to( { alpha: 1.0, },
-                    1200,
-                    Phaser.Easing.Quadratic.In,
-                    true, 0, 0, true
-                );
-        });
-        this.game.time.events.add(11000, () => {
-            const uhoh = this.game.add.sprite(this.game.world.centerX, this.game.world.height - 400, 'uh-oh');
-            uhoh.alpha = 0;
-            uhoh.anchor.set(0.5, 1);
-            this.game.add
-                .tween(uhoh)
-                .to( { alpha: 1.0, },
-                    1200,
-                    Phaser.Easing.Quadratic.In,
-                    true, 0, 0, true
-                );
-        });
-
-        this.game.time.events.add(10300, () => {
-            if (config.STRAYS_ENABLED) {
-                this.game.time.events.add(config.RATE_CREATE_ASTEROID, this.singleAsteroidLoop, this);
-                this.game.time.events.add(config.RATE_CREATE_COMET, this.singleCometLoop, this);
-            }
-            this.game.time.events.loop(config.RATE_RAISE_DIFFICULTY, () => this.stats.difficulty += config.DIFFICULTY_INCREASE_RATE, this); // Increase the difficulty
-            this.game.time.events.add(2000, this.fireBarrage.bind(this), this);
-        }, this);
-        this.game.time.events.add(13300, () => {
-            this.game.time.events.loop(config.RATE_LAUNCH_TRANSPORT, this.launchTransport, this);
-        }, this);
-
+        this.beginGame();
     }
 
     update() {
@@ -534,11 +476,14 @@ class PlayState extends Phaser.State {
     updateTouchControls() {
         const {x, y} = this.touchControl.speed;
         const angle = -Math.PI/2 + this.game.physics.arcade.angleToXY(this.game.world, x, y);
+        const mag = Math.sqrt(x*x + y*y);
+        const enoughMag = mag > 30;
+        const joystickHeld = x !== 0 && y !== 0;
         // only update the barrier position if the virtual joystick is being
         // held.  if x and y are both 0, it means the player released the
         // joystick, and in that case we should leave the barrier wherever it
         // is instead of snapping to 0,0.
-        if (x !== 0 && y !== 0) {
+        if (joystickHeld && enoughMag) {
             this.updateBarrierRotation(angle, -x, -y);
         }
     }
@@ -563,6 +508,10 @@ class PlayState extends Phaser.State {
     }
 
     /* misc functions */
+
+    beginGame() {
+        console.log('[play] beginGame no-op');
+    }
 
     asteroidStrike(earth, asteroid) {
         console.log('[play] asteroid strike');
@@ -801,7 +750,13 @@ class PlayState extends Phaser.State {
         return ((Math.pow(this.stats.difficulty, 2) / 2) * 1000) + base;
     }
 
-    fireBarrage() {
+    /**
+     * Fire a barrage.
+     *
+     * @param {Number} count How many barrages to schedule, one after another.  Default: Infinity
+     * @param {Function} callback A callback function which will be run after `count` number of barrages have elapsed.
+     */
+    fireBarrage(count=Infinity, callback=_.noop) {
         // get random barrage function
         let barrageFunc = this.barrageFunctions[this.between(0, this.barrageFunctions.length - 1)];
         let barrageDuration;
@@ -840,8 +795,20 @@ class PlayState extends Phaser.State {
         this.timeToNextBarrage = Math.min(this.timeToNextBarrage / this.stats.difficulty, config.MAX_TIME_BETWEEN_BARRAGE);
         this.timeToNextBarrage = Math.max(this.timeToNextBarrage, config.MIN_TIME_BETWEEN_BARRAGE);
         this.timeToNextBarrage += barrageDuration;
-        console.log("[play] time to next barrage: ", this.timeToNextBarrage, this.stats.difficulty, barrageDuration);
-        this.game.time.events.add(this.timeToNextBarrage, this.fireBarrage.bind(this));
+
+        const countRemaining = count - 1;
+        if (count < Infinity) {
+            console.log(`[play] barrages remaining: ${countRemaining}`);
+        }
+
+        if (countRemaining > 0) {
+            console.log("[play] time to next barrage: ", this.timeToNextBarrage, this.stats.difficulty, barrageDuration);
+            this.game.time.events.add(this.timeToNextBarrage, () => this.fireBarrage(countRemaining, callback));
+        }
+        else {
+            console.log("[play] time to fireBarrage callback: ", this.timeToNextBarrage, this.stats.difficulty, barrageDuration);
+            this.game.time.events.add(this.timeToNextBarrage, callback);
+        }
     }
 
     fireMissile({ position }) {

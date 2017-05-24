@@ -91,7 +91,7 @@ class MenuState extends Phaser.State {
     }
 
     next() {
-        this.game.stateTransition.to('PlayState');
+        this.game.stateTransition.to('PlayWavesState');
     }
 
     shutdown() {
