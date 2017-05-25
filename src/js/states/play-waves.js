@@ -1,17 +1,26 @@
 class PlayWavesState extends PlayState {
     static get waves() {
+        const zigzag = 'createZigZagBarrage';
+        const spiral = 'createSpiralBarrage';
+        const column = 'createColumnBarrage';
         return Object.freeze([
             {
                 number: 1,
-                barrageCount: 1,
+                barrageCount: 2,
                 difficulty: 0.5,
-                barrageStyles: ['Spiral']
+                barrageStyles: [spiral]
             },
             {
                 number: 2,
-                barrageCount: 1,
+                barrageCount: 2,
                 difficulty: 1.0,
-                barrageStyles: ['Column']
+                barrageStyles: [zigzag]
+            },
+            {
+                number: 3,
+                barrageCount: 2,
+                difficulty: 1.5,
+                barrageStyles: [column]
             },
         ]);
     }
@@ -36,7 +45,7 @@ class PlayWavesState extends PlayState {
         this.stats.difficulty = wave.difficulty + newGameDifficulty;
 
         // set active barrages for this wave
-        this.barrageFunctions = _.map(wave.barrageStyles, style => this[`create${style}Barrage`]);
+        this.barrageFunctions = _.map(wave.barrageStyles, style => this[style]);
 
         // schedule first barrage (fireBarrage itself schedules the rest)
         this.game.time.events.add(2000, () => this.fireBarrage(wave.barrageCount, this.nextWave.bind(this)), this);
