@@ -6,7 +6,7 @@
   "scripts": {
     "postinstall": "echo \"Play nice!\"",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "browser-sync start --server --serveStatic src/ --files 'src/**/*' --no-inject-changes --directory",
+    "start": "browser-sync start --port 8088 --server --serveStatic src/ --files 'src/**/*' --no-inject-changes --directory",
     "build": "mkdir -p dist && cp -r src/* dist && babel src/ --out-dir dist --presets=env --ignore lib/*"
   },
   "author": "TeamScripta <admin@scripta.co>",
@@ -21,6 +21,5 @@
     "babel-preset-env": "^1.1.6",
     "browser-sync": "^2.18.2"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }

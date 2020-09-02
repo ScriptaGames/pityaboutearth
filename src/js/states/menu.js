@@ -18,7 +18,7 @@ class MenuState extends Phaser.State {
         this.fontSet = `! "#$%^'()* +,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_abcdefghijklmnopqrstuvwxyz{|}~`;
 
         this.story = [
-            `Humanity, listen up. This is`,
+            `${PAE_USERNAME}, listen up. This is`,
             `the Universe. I am sick of`,
             `your incessant nosing about.`,
             `The incoming asteroid should`,
