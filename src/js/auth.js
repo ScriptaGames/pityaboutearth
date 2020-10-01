@@ -1,8 +1,4 @@
-const keycloak = new Keycloak({
-    url: 'https://auth.stage.redhat.com/auth',
-    realm: 'EmployeeIDP',
-    clientId: 'warhw-arcade'
-});
+const keycloak = new Keycloak(window.kcConfig);
 window.kc = keycloak;
 keycloak.init().success(async function(authenticated) {
     console.log(`[auth] initialized keycloak.js`);
