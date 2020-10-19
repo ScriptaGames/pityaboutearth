@@ -26,10 +26,10 @@ class ScoreState extends Phaser.State {
 
         localStorage.hiscore = Math.max(hiscore, score);
 
-        if (typeof window.leaderboard !== "undefined") {
+        if (typeof window.RBthAbs !== "undefined") {
             const username = localStorage.getItem("arcade-username");
             if (username) {
-                leaderboard.reportScore(username, score);
+                RBthAbs.reportScore(username, score);
             }
         }
 
