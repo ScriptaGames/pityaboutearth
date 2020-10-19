@@ -4,6 +4,7 @@
   "description": "A videogame Ludum Dare 38.",
   "main": "index.js",
   "scripts": {
+    "publish": "npm run build && ghp dist --force --branch built",
     "postinstall": "echo \"Play nice!\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "browser-sync start --port 8088 --server --serveStatic src/ --files 'src/**/*' --no-inject-changes --directory",
@@ -21,6 +22,7 @@
     "@babel/core": "^7.11.6",
     "@babel/plugin-transform-runtime": "^7.11.5",
     "@babel/preset-env": "^7.11.5",
-    "browser-sync": "^2.18.2"
+    "browser-sync": "^2.18.2",
+    "ghp": "^1.6.0"
   }
 }
