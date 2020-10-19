@@ -17,17 +17,22 @@ class MenuState extends Phaser.State {
 
         this.fontSet = `! "#$%^'()* +,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_abcdefghijklmnopqrstuvwxyz{|}~`;
 
+        const username = localStorage.getItem("arcade-username") || "Human";
+
         this.story = [
-            `${PAE_USERNAME}, listen up. This is`,
+            `${username}, listen up. This is`,
             `the Universe. I am sick of`,
             `your incessant nosing about.`,
             `The incoming asteroid should`,
             `resolve matters.`,
             `       -- Yours, the Universe`,
             ``,
-            `(Protect Earth while shuttles`,
-            `ferry "repopulation experts"`,
+            `(Protect Earth while escape`,
+            `shuttles carry survivors`,
             `to other, safer worlds)`,
+            ``,
+            `Ps. #2020.`,
+            `       -- Yours, the Universe`,
 
             // `The universe, growing tired of`,
             // `Humanity's constant, tedious`,

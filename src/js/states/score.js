@@ -26,6 +26,13 @@ class ScoreState extends Phaser.State {
 
         localStorage.hiscore = Math.max(hiscore, score);
 
+        if (typeof window.leaderboard !== "undefined") {
+            const username = localStorage.getItem("arcade-username");
+            if (username) {
+                leaderboard.reportScore(username, score);
+            }
+        }
+
             console.log(`[play] score is ${score}`);
         if (score > hiscore) {
             console.log(`[play] ${score} > ${hiscore}, new HISCORE!!!`);
@@ -67,9 +74,8 @@ class ScoreState extends Phaser.State {
             this.story = [
                 `Well done, you saved ${score}`,
                 `people.  Humanity is probably`,
-                `still doomed, but will have`,
-                `a good time with the`,
-                `repopulation effort.`,
+                `still doomed, but the survivors`,
+                `will have a nice retirement. `,
 
                 // `The universe, growing tired of`,
                 // `Humanity's constant, tedious`,
