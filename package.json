@@ -4,11 +4,11 @@
   "description": "A videogame Ludum Dare 38.",
   "main": "index.js",
   "scripts": {
-    "publish": "npm run build && ghp dist --append pity-about-earth --force --branch built",
+    "publish": "npm run build && ghp dist --force --branch built",
     "postinstall": "echo \"Play nice!\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "browser-sync start --port 8088 --server --serveStatic src/ --files 'src/**/*' --no-inject-changes --directory",
-    "build": "mkdir -p dist && cp -r src/* dist && babel src/ --out-dir dist --ignore lib/*"
+    "build": "mkdir -p dist && cp -r src/* dist && babel src/ --out-dir dist/pity-about-earth --ignore lib/*"
   },
   "author": "TeamScripta <admin@scripta.co>",
   "contributors": [
