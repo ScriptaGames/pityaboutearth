@@ -8,7 +8,7 @@
     "postinstall": "echo \"Play nice!\"",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "browser-sync start --port 8088 --server --serveStatic src/ --files 'src/**/*' --no-inject-changes --directory",
-    "build": "mkdir -p dist && cp -r src/* dist && babel src/ --out-dir dist/pity-about-earth --ignore lib/*"
+    "build": "mkdir -p dist/pity-about-earth && cp -r src/* dist/pity-about-earth && babel src/ --out-dir dist/pity-about-earth --ignore lib/*"
   },
   "author": "TeamScripta <admin@scripta.co>",
   "contributors": [
