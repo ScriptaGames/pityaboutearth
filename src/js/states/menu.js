@@ -29,8 +29,6 @@ class MenuState extends Phaser.State {
             ``,
             `(Protect Earth while escape`,
             `shuttles... well, escape)`,
-            ``,
-            `       -- Yours, the Universe`,
 
             // `The universe, growing tired of`,
             // `Humanity's constant, tedious`,
