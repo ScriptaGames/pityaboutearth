@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="icon" type="image/png" href="favicon.png">
+        <title>Pity About Earth... - a Scripta Game</title>
+
+        <meta name="description" content="Humanity, I am sick of you.  Yours truly, the Universe.  A game by Scripta Games, for Ludum Dare 38.">
+        <meta name="keywords" content="pity-about-earth,ludum-dare,ld38">
+        <meta property="og:type" content="game">
+        <meta property="og:title" content="Pity About Earth... - a Scripta Game">
+        <meta property="og:url" content="http://scripta.co/pityaboutearth/">
+        <meta property="og:site_name" content="Scripta Games">
+        <meta property="og:description" content="Humanity, I am sick of you.  Yours truly, the Universe.  A game by Scripta Games, for Ludum Dare 38.">
+        <meta property="og:image" content="http://scripta.co/pityaboutearth/images/thumb-two-pane.jpg">
+        <meta property="og:updated_time" content="2017-04-25T01:51:56.683Z">
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="Pity About Earth... - a Scripta Game">
+        <meta name="twitter:description" content="Humanity, I am sick of you.  Yours truly, the Universe.  A game by Scripta Games, for Ludum Dare 38.">
+        <meta name="twitter:image" content="http://scripta.co/pityaboutearth/images/thumb-two-pane.jpg">
+
+        <style type="text/css" media="screen">
+            html, body {
+                margin: 0;
+                padding: 0;
+                height: 100%;
+                background: #0f0f0f;
+                width: 100%;
+                overflow: hidden;
+                color: white;
+                cursor: url('./images/cursor.png') 15 17, crosshair !important;
+            }
+            canvas {
+                margin: 0 auto;
+            }
+        </style>
+    </head>
+    <body>
+
+        <!-- third party -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.6.2/phaser.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-promise/4.0.5/es6-promise.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.1/fetch.min.js"></script>
+        <script src="lib/phaser-state-transition-plugin.min.js"></script>
+        <script src="lib/phaser-touch-control.js"></script>
+        <script src="lib/isMobile.min.js"></script>
+
+        <!-- first party -->
+        <script src="js/config.js"></script>
+        <script src="js/classes/Barrage.js"></script>
+        <script src="js/states/boot.js"></script>
+        <script src="js/states/preload.js"></script>
+        <script src="js/states/menu.js"></script>
+        <script src="js/states/play.js"></script>
+        <script src="js/states/score.js"></script>
+        <script src="js/game.js"></script>
+        <script src="js/main.js"></script>
+
+
+        <!-- Google Analytics -->
+        <script type="text/javascript">
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-73203609-2', 'auto');
+            ga('send', 'pageview');
+
+        </script>
+        <!-- End Google Analytics -->
+
+    </body>
+</html>
