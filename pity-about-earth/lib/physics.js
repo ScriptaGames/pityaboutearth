@@ -137,7 +137,7 @@
     }), a.forEach(({
       name: n,
       score: e
-    }) => u(n, e)), a.splice(0), console.log("initialized", s);
+    }) => u(n, e)), a.splice(0), console.log("Leaderboard initialized");
   }();
   const s = {
     initialized: !1

@@ -1,0 +1,6 @@
+{
+    "secret": "secret_value",
+    "leaderboard": "leaderboard_endpoint_url",
+    "username": "username_value",
+    "password": "password_value"
+}
